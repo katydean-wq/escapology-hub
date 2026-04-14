@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hub — Escapology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+
+    <!-- HERO BANNER -->
+    <section class="hero-banner">
+      <div class="hero-content">
+        <div class="hero-eyebrow">The Hub · Franchise Portal</div>
+        <h1 class="hero-title">Welcome back, <em>Katy.</em></h1>
+        <p class="hero-sub">Everything you need to run your Escapology venue — campaigns, playbooks, training, and the latest from HQ.</p>
+      </div>
+    </section>
+
+    <div class="content-inner">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <a class="quick-card primary" href="marketing.html#request">
+          <div class="qa-icon">✎</div>
+          <h3>Submit a Marketing Request</h3>
+          <p>Request custom creative, local campaigns, or promo assets from HQ.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a class="quick-card" href="documents.html">
+          <div class="qa-icon">⌕</div>
+          <h3>Find a Document</h3>
+          <p>Search SOPs, training materials, brand assets, and contracts.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a class="quick-card" href="news.html">
+          <div class="qa-icon">◉</div>
+          <h3>See What's New</h3>
+          <p>Announcements, game releases, and system updates.</p>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <!-- News + Announcement -->
+      <div class="section-head">
+        <h2>Latest News &amp; Updates</h2>
+        <a href="news.html">View all →</a>
+      </div>
+      <div class="news-grid">
+        <div class="news-list">
+          <div class="news-item">
+            <div class="news-date">APR<strong>12</strong></div>
+            <div>
+              <h4><span class="pill brass">New Game</span> "The Cipher Room" now available for booking</h4>
+              <p>Full launch kit including room specs, marketing assets, and GM training is live in the Games section.</p>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-date">APR<strong>08</strong></div>
+            <div>
+              <h4><span class="pill emerald">Operations</span> Updated safety &amp; compliance SOP for Q2</h4>
+              <p>Review required by April 30. All GMs must complete the new acknowledgment form.</p>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-date">APR<strong>03</strong></div>
+            <div>
+              <h4><span class="pill brick">Alert</span> Booking system scheduled maintenance, April 20</h4>
+              <p>Planned downtime 2–4 AM ET. Failover instructions sent to all venue managers.</p>
+            </div>
+          </div>
+          <div class="news-item">
+            <div class="news-date">MAR<strong>28</strong></div>
+            <div>
+              <h4><span class="pill gold">Marketing</span> Mother's Day campaign templates now available</h4>
+              <p>Editable social, email, and flyer assets in the Marketing → Evergreen Campaigns library.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="announcement">
+          <div class="label">Featured</div>
+          <h3>Summer Promo Toolkit 2026</h3>
+          <p>Ready-to-deploy social creative, email copy, and in-venue signage for the summer season. Deploy window: May 15 – August 31.</p>
+          <a href="marketing.html" class="btn">Get the Toolkit</a>
+        </div>
+      </div>
+
+      <!-- Popular Resources -->
+      <div class="section-head">
+        <h2>Popular Resources</h2>
+        <a href="documents.html">Browse all →</a>
+      </div>
+      <div class="resource-grid">
+        <a class="resource-card" href="marketing.html">
+          <div class="resource-icon ri-brass">▤</div>
+          <h4>Game Marketing Assets</h4>
+          <p>Social, email, and print templates for every game in the catalog.</p>
+          <div class="resource-meta">Marketing</div>
+        </a>
+        <a class="resource-card" href="operations.html">
+          <div class="resource-icon ri-emerald">⚙</div>
+          <h4>Venue Operations Manual</h4>
+          <p>The complete day-to-day playbook for running your location.</p>
+          <div class="resource-meta">Operations</div>
+        </a>
+        <a class="resource-card" href="training.html">
+          <div class="resource-icon ri-iron">▦</div>
+          <h4>GM Certification Course</h4>
+          <p>Required training curriculum for all new game masters.</p>
+          <div class="resource-meta">Training</div>
+        </a>
+        <a class="resource-card" href="games.html">
+          <div class="resource-icon ri-brick">◇</div>
+          <h4>Reset Guides by Game</h4>
+          <p>Step-by-step room reset instructions with photo references.</p>
+          <div class="resource-meta">Games</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-gold">▲</div>
+          <h4>Pre-Opening Checklist</h4>
+          <p>Milestones and deliverables for new venue buildout.</p>
+          <div class="resource-meta">Venue Development</div>
+        </a>
+        <a class="resource-card" href="marketing.html#brand">
+          <div class="resource-icon ri-paper">◈</div>
+          <h4>Brand Standards Manual</h4>
+          <p>Logo, color, typography, photography, voice &amp; tone.</p>
+          <div class="resource-meta">Marketing</div>
+        </a>
+        <a class="resource-card" href="marketing.html#request">
+          <div class="resource-icon ri-brass">✎</div>
+          <h4>Marketing Request Form</h4>
+          <p>Submit a request for custom creative or campaign support.</p>
+          <div class="resource-meta">Marketing</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-emerald">☏</div>
+          <h4>HQ Contact Directory</h4>
+          <p>Who to reach for marketing, ops, tech, and franchise support.</p>
+          <div class="resource-meta">Support</div>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+</body>
+</html>
