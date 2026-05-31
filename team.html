@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Team Directory — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+/* ─── Org Chart Variables (scoped, no body/html overrides) ─── */
+.team-dir {
+  --oc-bg:#0a0f1a;--oc-surface:#111827;--oc-surface2:#1a2332;--oc-surface3:#222d3d;
+  --oc-text:#e8e6e1;--oc-text-dim:#8a9bb0;--oc-text-bright:#f5f3ef;
+  --oc-border:#2a3444;--oc-border-light:#3a4a5a;
+  --oc-brass:#B77729;--oc-gold:#F5A737;--oc-teal:#06DCCE;
+  --oc-iron:#3B4559;--oc-steel:#6F8178;--oc-rust:#432E14;
+  --oc-brick:#8D1324;--oc-emerald:#215D58;--oc-black:#021414;
+  --oc-paper:#FFFEF6;
+  --glow-brass:rgba(183,119,41,.15);--glow-teal:rgba(6,220,206,.12);
+}
+
+/* ─── Search ─── */
+.team-dir .search-wrap{position:relative;max-width:420px;min-width:200px;margin-bottom:1rem}
+.team-dir .search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--oc-text-dim);pointer-events:none}
+.team-dir .search-input{
+  width:100%;padding:.7rem 1rem .7rem 2.6rem;
+  background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:10px;
+  color:var(--oc-text);font-size:.9rem;font-family:inherit;outline:none;transition:all .2s;
+}
+.team-dir .search-input:focus{border-color:var(--oc-teal);box-shadow:0 0 0 3px var(--glow-teal)}
+.team-dir .search-input::placeholder{color:var(--oc-text-dim)}
+
+/* ─── View Tabs ─── */
+.team-dir .view-tabs{display:flex;gap:4px;background:var(--oc-surface);border-radius:10px;padding:4px;border:1px solid var(--oc-border);width:fit-content;margin-bottom:1.2rem}
+.team-dir .view-tab{
+  padding:.45rem 1rem;border-radius:7px;border:none;
+  background:transparent;color:var(--oc-text-dim);font-family:inherit;
+  font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.team-dir .view-tab.active{background:var(--oc-brass);color:var(--oc-black)}
+.team-dir .view-tab:hover:not(.active){color:var(--oc-text)}
+
+/* ─── Stats ─── */
+.team-dir .stats-bar{display:flex;gap:1.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.team-dir .stat{display:flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--oc-text-dim)}
+.team-dir .stat-num{font-weight:800;color:var(--oc-teal);font-size:.95rem}
+.team-dir .stat-label{opacity:.7}
+
+/* ─── Directory Grid ─── */
+.team-dir .dept-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.team-dir .dept-tab{
+  padding:.4rem .9rem;border-radius:20px;border:1px solid var(--oc-border);
+  background:transparent;color:var(--oc-text-dim);font-family:inherit;
+  font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;
+}
+.team-dir .dept-tab.active{background:var(--oc-brass);color:var(--oc-black);border-color:var(--oc-brass)}
+.team-dir .dept-tab:hover:not(.active){border-color:var(--oc-text-dim);color:var(--oc-text)}
+.team-dir .dept-tab .count{display:inline-block;background:rgba(255,255,255,.15);border-radius:10px;padding:0 .45rem;margin-left:.3rem;font-size:.7rem}
+.team-dir .dept-tab.active .count{background:rgba(0,0,0,.2)}
+.team-dir .directory-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+
+/* ─── Person Card ─── */
+.team-dir .person-card{
+  background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:14px;
+  padding:1.3rem;display:flex;align-items:flex-start;gap:1rem;
+  cursor:pointer;transition:all .25s ease;position:relative;overflow:hidden;
+}
+.team-dir .person-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--oc-brass),var(--oc-gold));opacity:0;transition:opacity .25s}
+.team-dir .person-card:hover{border-color:var(--oc-border-light);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.team-dir .person-card:hover::before{opacity:1}
+.team-dir .person-card.new-hire{border-left:3px solid var(--oc-gold)}
+.team-dir .person-card.open-position{border-left:3px solid var(--oc-teal);opacity:.7}
+.team-dir .oc-avatar{
+  width:48px;height:48px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.85rem;color:var(--oc-black);
+  background:linear-gradient(135deg,var(--oc-brass),var(--oc-gold));
+  overflow:hidden;
+}
+.team-dir .oc-avatar img,.team-dir .tree-avatar img,.team-dir .modal-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.team-dir .oc-avatar.ceo{background:linear-gradient(135deg,var(--oc-gold),#e8c547)}
+.team-dir .oc-avatar.csuite{background:linear-gradient(135deg,var(--oc-brass),var(--oc-rust))}
+.team-dir .oc-avatar.vp{background:linear-gradient(135deg,var(--oc-emerald),var(--oc-teal))}
+.team-dir .oc-avatar.dir{background:linear-gradient(135deg,var(--oc-iron),var(--oc-steel))}
+.team-dir .oc-avatar.open{background:linear-gradient(135deg,var(--oc-surface3),var(--oc-border));color:var(--oc-text-dim)}
+.team-dir .card-info{flex:1;min-width:0}
+.team-dir .card-name{font-weight:700;font-size:1rem;color:var(--oc-text-bright);margin-bottom:.15rem}
+.team-dir .card-title{font-size:.8rem;color:var(--oc-brass);margin-bottom:.4rem;font-weight:600}
+.team-dir .card-dept{font-size:.72rem;color:var(--oc-text-dim);display:flex;align-items:center;gap:.3rem}
+.team-dir .card-dept svg{width:12px;height:12px}
+.team-dir .card-email{
+  font-size:.72rem;color:var(--oc-teal);margin-top:.35rem;
+  display:flex;align-items:center;gap:.3rem;opacity:0;
+  transition:opacity .2s;text-decoration:none;
+}
+.team-dir .card-email:hover{text-decoration:underline}
+.team-dir .person-card:hover .card-email{opacity:1}
+.team-dir .new-badge{
+  position:absolute;top:12px;right:12px;font-size:.6rem;font-weight:800;
+  padding:.15rem .5rem;border-radius:6px;background:var(--oc-gold);color:var(--oc-black);
+  text-transform:uppercase;letter-spacing:.05em;
+}
+
+/* ─── Modal ─── */
+.team-dir .modal-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);
+  z-index:200;display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);padding:1rem;
+}
+.team-dir .modal-overlay.open{display:flex}
+.team-dir .modal{
+  background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:20px;
+  width:100%;max-width:480px;overflow:hidden;animation:modalIn .25s ease;
+}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.team-dir .modal-header{
+  padding:2rem 2rem 1.2rem;text-align:center;
+  background:linear-gradient(135deg,var(--oc-surface2),var(--oc-surface));
+  border-bottom:1px solid var(--oc-border);position:relative;
+}
+.team-dir .modal-close{
+  position:absolute;top:12px;right:14px;background:none;border:none;
+  color:var(--oc-text-dim);font-size:1.3rem;cursor:pointer;padding:.3rem;
+  border-radius:8px;transition:all .2s;line-height:1;
+}
+.team-dir .modal-close:hover{color:var(--oc-text);background:var(--oc-surface3)}
+.team-dir .modal-avatar{
+  width:72px;height:72px;border-radius:18px;margin:0 auto .8rem;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1.3rem;color:var(--oc-black);
+  background:linear-gradient(135deg,var(--oc-brass),var(--oc-gold));
+  overflow:hidden;
+}
+.team-dir .modal-name{font-size:1.3rem;font-weight:700;color:var(--oc-text-bright);font-family:'Cormorant Garamond',serif}
+.team-dir .modal-title{font-size:.9rem;color:var(--oc-brass);font-weight:600;margin-top:.2rem}
+.team-dir .modal-body{padding:1.5rem 2rem 2rem}
+.team-dir .modal-row{display:flex;align-items:center;gap:.8rem;padding:.7rem 0;border-bottom:1px solid var(--oc-border);font-size:.85rem}
+.team-dir .modal-row:last-child{border-bottom:none}
+.team-dir .modal-row svg{width:18px;height:18px;color:var(--oc-text-dim);flex-shrink:0}
+.team-dir .modal-row-label{color:var(--oc-text-dim);min-width:80px;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.team-dir .modal-row-value{color:var(--oc-text-bright)}
+.team-dir .modal-row-value a{color:var(--oc-teal);text-decoration:none}
+.team-dir .modal-row-value a:hover{text-decoration:underline}
+.team-dir .modal-actions{display:flex;gap:.6rem;margin-top:1rem}
+.team-dir .modal-btn{
+  flex:1;padding:.65rem;border-radius:10px;border:none;font-family:inherit;
+  font-size:.82rem;font-weight:700;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;gap:.4rem;text-decoration:none;
+}
+.team-dir .modal-btn.primary{background:var(--oc-brass);color:var(--oc-black)}
+.team-dir .modal-btn.primary:hover{background:var(--oc-gold)}
+.team-dir .modal-btn.secondary{background:var(--oc-surface3);color:var(--oc-text);border:1px solid var(--oc-border)}
+.team-dir .modal-btn.secondary:hover{border-color:var(--oc-text-dim)}
+
+/* ─── Vertical Org Chart ─── */
+.team-dir .org-wrap{
+  display:grid;grid-template-columns:280px 1fr;gap:2rem;min-height:60vh;
+}
+.team-dir .org-sidebar{
+  background:var(--oc-surface);border:1px solid var(--oc-border);border-radius:14px;
+  padding:1.2rem;position:sticky;top:100px;align-self:start;max-height:calc(100vh - 120px);overflow-y:auto;
+}
+.team-dir .org-sidebar h3{font-size:.8rem;color:var(--oc-text-dim);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.8rem;font-weight:700}
+.team-dir .org-dept-btn{
+  width:100%;text-align:left;padding:.6rem .8rem;border:none;background:none;
+  color:var(--oc-text);font-family:inherit;font-size:.85rem;cursor:pointer;
+  border-radius:8px;transition:all .15s;display:flex;align-items:center;gap:.5rem;
+  margin-bottom:.2rem;
+}
+.team-dir .org-dept-btn:hover{background:var(--oc-surface3)}
+.team-dir .org-dept-btn.active{background:var(--oc-brass);color:var(--oc-black);font-weight:700}
+.team-dir .org-dept-btn .dept-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.team-dir .org-dept-btn .dept-count{margin-left:auto;font-size:.7rem;opacity:.6}
+.team-dir .org-main{flex:1}
+
+/* Tree nodes */
+.team-dir .tree-branch{margin-left:0}
+.team-dir .tree-branch .tree-branch{margin-left:1.5rem;border-left:2px solid var(--oc-border);padding-left:0}
+.team-dir .tree-person{
+  display:flex;align-items:center;gap:.8rem;padding:.55rem .8rem;
+  border-radius:10px;cursor:pointer;transition:all .15s;position:relative;
+  margin-bottom:2px;
+}
+.team-dir .tree-person:hover{background:var(--oc-surface2)}
+.team-dir .tree-person::before{
+  content:'';position:absolute;left:-1.5rem;top:50%;
+  width:1.5rem;height:0;border-top:2px solid var(--oc-border);
+}
+.team-dir .tree-branch > .tree-person::before{display:none}
+.team-dir .tree-branch .tree-branch > .tree-person::before{display:block}
+
+.team-dir .tree-avatar{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:.7rem;color:var(--oc-black);overflow:hidden;
+}
+.team-dir .tree-avatar.ta-ceo{background:linear-gradient(135deg,var(--oc-gold),#e8c547)}
+.team-dir .tree-avatar.ta-csuite{background:linear-gradient(135deg,var(--oc-brass),var(--oc-rust))}
+.team-dir .tree-avatar.ta-vp{background:linear-gradient(135deg,var(--oc-emerald),var(--oc-teal))}
+.team-dir .tree-avatar.ta-dir{background:linear-gradient(135deg,var(--oc-iron),var(--oc-steel));color:var(--oc-paper)}
+.team-dir .tree-avatar.ta-default{background:linear-gradient(135deg,var(--oc-brass),var(--oc-gold))}
+.team-dir .tree-avatar.ta-open{background:var(--oc-surface3);color:var(--oc-text-dim);border:1px dashed var(--oc-border)}
+
+.team-dir .tree-info{flex:1;min-width:0}
+.team-dir .tree-name{font-weight:700;font-size:.85rem;color:var(--oc-text-bright);line-height:1.2}
+.team-dir .tree-title{font-size:.72rem;color:var(--oc-brass);line-height:1.2}
+.team-dir .tree-email{font-size:.65rem;color:var(--oc-teal);opacity:0;transition:opacity .15s}
+.team-dir .tree-person:hover .tree-email{opacity:1}
+
+.team-dir .tree-toggle{
+  width:22px;height:22px;border-radius:6px;border:1px solid var(--oc-border);
+  background:var(--oc-surface3);color:var(--oc-text-dim);font-size:.65rem;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;transition:all .15s;font-weight:700;
+}
+.team-dir .tree-toggle:hover{border-color:var(--oc-brass);color:var(--oc-brass)}
+.team-dir .tree-toggle.open{background:var(--oc-brass);color:var(--oc-black);border-color:var(--oc-brass)}
+
+.team-dir .tree-children{overflow:hidden;transition:max-height .3s ease}
+.team-dir .tree-children.collapsed{max-height:0 !important}
+.team-dir .tree-new{border-left:2px solid var(--oc-gold);margin-left:-2px;padding-left:2px}
+.team-dir .tree-person.highlight{background:var(--oc-surface2);box-shadow:inset 0 0 0 1px var(--oc-brass)}
+
+.team-dir .no-results{text-align:center;padding:4rem 2rem;color:var(--oc-text-dim)}
+.team-dir .no-results h3{font-size:1.1rem;margin-bottom:.5rem;color:var(--oc-text)}
+
+/* ─── Responsive ─── */
+@media(max-width:900px){
+  .team-dir .org-wrap{grid-template-columns:1fr}
+  .team-dir .org-sidebar{position:static;max-height:none}
+}
+@media(max-width:768px){
+  .team-dir .directory-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .team-dir .modal{border-radius:14px}
+  .team-dir .modal-header{padding:1.5rem 1.5rem 1rem}
+  .team-dir .modal-body{padding:1rem 1.5rem 1.5rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content">
+
+      <div class="sp-hero">
+        <div class="inner">
+          <div class="breadcrumb"><a href="index.html">The Hub</a> › Team Directory</div>
+          <div class="eyebrow">Team</div>
+          <h1>HQ <em style="color:var(--brass);">Directory</em></h1>
+          <p>Find anyone at Escapology HQ — browse the org chart or search by name, title, or department.</p>
+        </div>
+      </div>
+
+      <div class="team-dir">
+        <div class="search-wrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input class="search-input" type="text" placeholder="Search by name, title, or department..." id="searchInput">
+        </div>
+        <div class="view-tabs">
+          <button class="view-tab active" data-view="directory">Directory</button>
+          <button class="view-tab" data-view="chart">Org Chart</button>
+        </div>
+        <div class="stats-bar" id="statsBar"></div>
+        <div id="teamContent"></div>
+
+        <div class="modal-overlay" id="modalOverlay">
+          <div class="modal" id="modal"></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+<script>
+const people = [
+  {id:'burton-heiss',name:'Burton Heiss',title:'CEO',depts:['Executive'],reportsTo:null,isNew:false},
+  {id:'megan-cumming',name:'Megan Cumming',title:'Office Manager / EA',depts:['Executive'],reportsTo:'burton-heiss',isNew:false},
+
+  {id:'adam-doktor',name:'Adam Doktor',title:'CFO',depts:['Executive','Finance'],reportsTo:'burton-heiss',isNew:false},
+  {id:'anthony-casey',name:'Anthony Casey',title:'Accounting Manager',depts:['Finance'],reportsTo:'adam-doktor',isNew:false},
+  {id:'brandon-steinhauer',name:'Brandon Steinhauer',title:'Corporate Games Operations',depts:['Finance'],reportsTo:'adam-doktor',isNew:false},
+  {id:'mariana-martinez',name:'Mariana Martinez',title:'Sr. Accountant',depts:['Finance'],reportsTo:'adam-doktor',isNew:false},
+  {id:'brad-beasley',name:'Brad Beasley',title:'Director of Finance',depts:['Finance'],reportsTo:'adam-doktor',isNew:false},
+  {id:'antonio-novoa',name:'Antonio Novoa',title:'Account Services Manager',depts:['Finance'],reportsTo:'adam-doktor',isNew:false},
+
+  {id:'katy-dean',name:'Katy Dean',title:'COO / CMO',depts:['Executive','Operations','Marketing'],reportsTo:'burton-heiss',isNew:false},
+  {id:'john-ronia',name:'John Ronia',title:'Area Manager — East',depts:['Operations'],reportsTo:'katy-dean',isNew:false},
+  {id:'jackie-scally',name:'Jackie Scally',title:'Area Manager — West',depts:['Operations'],reportsTo:'katy-dean',isNew:false},
+  {id:'morgan-stotz',name:'Morgan Stotz',title:'VP Ops Services',depts:['Operations'],reportsTo:'katy-dean',isNew:false},
+  {id:'steven-dipilla',name:'Steven DiPilla',title:'Director of People',depts:['Operations'],reportsTo:'morgan-stotz',isNew:false},
+  {id:'steve-croughan',name:'Steve Croughan',title:'Director of Training',depts:['Operations'],reportsTo:'morgan-stotz',isNew:false},
+
+  {id:'amber-bennet',name:'Amber Bennet',title:'Franchise Support Manager',depts:['Operations'],reportsTo:'katy-dean',isNew:true},
+  {id:'sierra-erny',name:'Sierra Erny',title:'Group Sales Rep',depts:['Group Sales'],reportsTo:'katy-dean',isNew:false},
+  {id:'jessica-casey',name:'Jessica Casey',title:'Group Sales Rep',depts:['Group Sales'],reportsTo:'katy-dean',isNew:false},
+  {id:'open-gs',name:'Open Position',title:'Group Sales Rep',depts:['Group Sales'],reportsTo:'katy-dean',isNew:false,isOpen:true},
+
+  {id:'emma-fee',name:'Emma Fee',title:'VP of Marketing',depts:['Marketing'],reportsTo:'katy-dean',isNew:false},
+  {id:'alex-johnson',name:'Alex Johnson',title:'Marketing Manager',depts:['Marketing'],reportsTo:'emma-fee',isNew:false},
+  {id:'ash-zaballero',name:'Ash Zaballero',title:'Graphic Designer',depts:['Marketing'],reportsTo:'emma-fee',isNew:false},
+  {id:'phil-logan',name:'Phil Logan',title:'Director of Digital',depts:['Marketing'],reportsTo:'emma-fee',isNew:true},
+  {id:'jake-winctzak',name:'Jake Winctzak',title:'Martech / Digital Ops',depts:['Marketing'],reportsTo:'emma-fee',isNew:true},
+
+  {id:'shawn-baxter',name:'Shawn Baxter',title:'CDO',depts:['Executive','Development'],reportsTo:'burton-heiss',isNew:false},
+  {id:'lloyd-notley',name:'Lloyd Notley',title:'VP Franchise Sales',depts:['Development'],reportsTo:'shawn-baxter',isNew:false},
+  {id:'zach-hardy',name:'Zach Hardy',title:'Director of Construction',depts:['Development'],reportsTo:'shawn-baxter',isNew:false},
+  {id:'andrea-soler',name:'Andrea Soler',title:'Director of Development',depts:['Development'],reportsTo:'shawn-baxter',isNew:false},
+  {id:'michelle-heltemes',name:'Michelle Heltemes',title:'Director of Development',depts:['Development'],reportsTo:'shawn-baxter',isNew:false},
+  {id:'juliana-fernandez',name:'Juliana Fernandez',title:'Real Estate Coordinator',depts:['Development'],reportsTo:'shawn-baxter',isNew:false},
+
+  {id:'ryan-williams',name:'Ryan Williams',title:'Director of EP&D',depts:['EP&D'],reportsTo:'burton-heiss',isNew:false},
+  {id:'jp-larocco',name:'JP La Rocco',title:'Game Installation',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'brianne-bolante',name:'Brianne Bolante',title:'Game Installation',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'anthony-buonfiglio',name:'Anthony Buonfiglio',title:'Production Manager',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'caitlyn-mckenna',name:'Caitlyn McKenna',title:'FX Lead',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'jen-rankin',name:'Jen Rankin',title:'Admin Manager',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'rachel-mckinsey',name:'Rachel McKinsey',title:'Spec Fab Lead',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+  {id:'amy-schneider',name:'Amy Schneider',title:'Development Manager',depts:['EP&D'],reportsTo:'ryan-williams',isNew:false},
+
+  {id:'mark-chemidlin',name:'Mark Chemidlin',title:'Director of Technology',depts:['Technology'],reportsTo:'burton-heiss',isNew:false},
+  {id:'nicolas-hirth',name:'Nicolas Hirth',title:'Shopify',depts:['Technology'],reportsTo:'mark-chemidlin',isNew:false},
+  {id:'cam-butler',name:'Cam Butler',title:'Carpentry Lead',depts:['Technology'],reportsTo:'mark-chemidlin',isNew:false},
+  {id:'rachel-reynolds',name:'Rachel Reynolds',title:'Scenic Lead',depts:['Technology'],reportsTo:'mark-chemidlin',isNew:false},
+
+  {id:'poppy-davison',name:'Poppy Davison',title:'Game Design Manager',depts:['Game Design'],reportsTo:'burton-heiss',isNew:false},
+];
+
+// ─── Department colors ───
+const deptColors = {
+  'Executive':'#F5A737','Finance':'#06DCCE','Operations':'#B77729',
+  'Group Sales':'#8D1324','Marketing':'#6F8178','Development':'#215D58',
+  'EP&D':'#3B4559','Technology':'#432E14','Game Design':'#F5A737'
+};
+
+// ─── Photo map ───
+const hasPhoto=new Set([
+  'burton-heiss','katy-dean','adam-doktor','shawn-baxter',
+  'anthony-casey','mark-chemidlin','emma-fee','lloyd-notley',
+  'zach-hardy','steven-dipilla','steve-croughan','andrea-soler'
+]);
+function photoUrl(p){return hasPhoto.has(p.id)?`team-photos/${p.id}.jpg`:null}
+function avatarHTML(p,size){
+  const url=photoUrl(p);
+  if(url) return `<img src="${url}" alt="${p.name}">`;
+  return getInitials(p);
+}
+
+// ─── Helpers ───
+function getEmail(p){
+  if(p.isOpen) return null;
+  return p.name.toLowerCase().split(' ').join('.')+'@escapology.com';
+}
+function getInitials(p){
+  if(p.isOpen) return '?';
+  return p.name.split(' ').map(n=>n[0]).join('');
+}
+function avatarLevel(p){
+  if(p.isOpen) return 'ta-open';
+  const t=p.title.toLowerCase();
+  if(t==='ceo') return 'ta-ceo';
+  if(t.includes('coo')||t.includes('cfo')||t.includes('cdo')) return 'ta-csuite';
+  if(t.includes('vp')) return 'ta-vp';
+  if(t.includes('director')||t.includes('dir ')) return 'ta-dir';
+  return 'ta-default';
+}
+function getAvatarClass(p){return 'oc-avatar '+(p.isOpen?'open':avatarLevel(p).replace('ta-',''))}
+function getDirectReports(id){return people.filter(p=>p.reportsTo===id)}
+function getManager(p){return people.find(m=>m.id===p.reportsTo)}
+const departments=[...new Set(people.flatMap(p=>p.depts))];
+function primaryDept(p){return p.depts[0]}
+function inDept(p,d){return p.depts.includes(d)}
+function deptLabel(p){return p.depts.join(', ')}
+
+// ─── State ───
+let currentView='directory', currentDept='All';
+const expandedNodes=new Set();
+people.filter(p=>p.reportsTo==='burton-heiss').forEach(p=>expandedNodes.add(p.id));
+expandedNodes.add('burton-heiss');
+
+// ─── Stats ───
+function renderStats(filtered){
+  const d=new Set(filtered.flatMap(p=>p.depts));
+  document.getElementById('statsBar').innerHTML=`
+    <div class="stat"><span class="stat-num">${filtered.length}</span><span class="stat-label">team members</span></div>
+    <div class="stat"><span class="stat-num">${d.size}</span><span class="stat-label">departments</span></div>
+    <div class="stat"><span class="stat-num">${filtered.filter(p=>p.isNew).length}</span><span class="stat-label">new hires</span></div>`;
+}
+
+// ─── Directory ───
+function renderDirectory(filter,search){
+  const s=(search||'').toLowerCase();
+  let filtered=people.filter(p=>{
+    const md=filter==='All'||inDept(p,filter);
+    const ms=!s||p.name.toLowerCase().includes(s)||p.title.toLowerCase().includes(s)||p.depts.some(d=>d.toLowerCase().includes(s));
+    return md&&ms;
+  });
+  renderStats(filtered);
+  const counts={All:people.length};
+  departments.forEach(d=>{counts[d]=people.filter(p=>inDept(p,d)).length});
+
+  let h=`<div class="dept-tabs">`;
+  ['All',...departments].forEach(d=>{
+    h+=`<button class="dept-tab${filter===d?' active':''}" data-dept="${d}">${d}<span class="count">${counts[d]}</span></button>`;
+  });
+  h+=`</div>`;
+  if(!filtered.length){
+    h+=`<div class="no-results"><h3>No matches found</h3><p>Try a different search or department.</p></div>`;
+  } else {
+    h+=`<div class="directory-grid">`;
+    filtered.forEach(p=>{
+      const email=getEmail(p), mgr=getManager(p);
+      h+=`<div class="person-card${p.isNew?' new-hire':''}${p.isOpen?' open-position':''}" data-id="${p.id}">
+        ${p.isNew?'<div class="new-badge">New</div>':''}
+        <div class="${getAvatarClass(p)}">${avatarHTML(p)}</div>
+        <div class="card-info">
+          <div class="card-name">${p.name}</div>
+          <div class="card-title">${p.title}</div>
+          <div class="card-dept"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>${deptLabel(p)}${mgr?' · reports to '+mgr.name:''}</div>
+          ${email?`<a class="card-email" href="mailto:${email}" onclick="event.stopPropagation()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>${email}</a>`:''}
+        </div></div>`;
+    });
+    h+=`</div>`;
+  }
+  document.getElementById('teamContent').innerHTML=h;
+  document.querySelectorAll('.team-dir .dept-tab').forEach(b=>b.addEventListener('click',()=>{currentDept=b.dataset.dept;render()}));
+  document.querySelectorAll('.team-dir .person-card').forEach(c=>c.addEventListener('click',()=>openModal(c.dataset.id)));
+}
+
+// ─── Org Chart (Vertical Tree) ───
+function renderOrgChart(search){
+  const s=(search||'').toLowerCase();
+  renderStats(people);
+
+  function matches(p){return !s||p.name.toLowerCase().includes(s)||p.title.toLowerCase().includes(s)||p.depts.some(d=>d.toLowerCase().includes(s))}
+  function hasMatch(id){const kids=getDirectReports(id);return kids.some(k=>matches(k)||hasMatch(k.id))}
+
+  // If searching, expand everything
+  if(s) people.forEach(p=>expandedNodes.add(p.id));
+
+  function buildBranch(parentId,depth){
+    const children=getDirectReports(parentId);
+    if(!children.length) return '';
+    let h='';
+    children.forEach(p=>{
+      if(s && !matches(p) && !hasMatch(p.id)) return;
+      const kids=getDirectReports(p.id);
+      const isExpanded=expandedNodes.has(p.id);
+      const email=getEmail(p);
+      const hl=s&&matches(p)?' highlight':'';
+      h+=`<div class="tree-branch${p.isNew?' tree-new':''}">
+        <div class="tree-person${hl}" data-id="${p.id}">
+          <div class="tree-avatar ${avatarLevel(p)}">${avatarHTML(p)}</div>
+          <div class="tree-info">
+            <div class="tree-name">${p.name}</div>
+            <div class="tree-title">${p.title}</div>
+            ${email?`<div class="tree-email">${email}</div>`:''}
+          </div>
+          ${kids.length?`<div class="tree-toggle${isExpanded?' open':''}" data-toggle="${p.id}">${isExpanded?'−':'+'} ${kids.length}</div>`:''}
+        </div>
+        <div class="tree-children${isExpanded?'':' collapsed'}" data-children="${p.id}">
+          ${isExpanded||s?buildBranch(p.id,depth+1):''}
+        </div>
+      </div>`;
+    });
+    return h;
+  }
+
+  // Sidebar
+  const deptCounts={};
+  departments.forEach(d=>{deptCounts[d]=people.filter(p=>inDept(p,d)).length});
+
+  const ceo=people.find(p=>!p.reportsTo);
+  let h=`<div class="org-wrap">
+    <div class="org-sidebar">
+      <h3>Departments</h3>
+      ${departments.map(d=>`<button class="org-dept-btn" data-dept="${d}">
+        <span class="dept-dot" style="background:${deptColors[d]||'var(--oc-brass)'}"></span>
+        ${d}<span class="dept-count">${deptCounts[d]}</span>
+      </button>`).join('')}
+    </div>
+    <div class="org-main">
+      <div class="tree-branch">
+        <div class="tree-person" data-id="${ceo.id}">
+          <div class="tree-avatar ta-ceo">${avatarHTML(ceo)}</div>
+          <div class="tree-info">
+            <div class="tree-name">${ceo.name}</div>
+            <div class="tree-title">${ceo.title}</div>
+            <div class="tree-email">${getEmail(ceo)}</div>
+          </div>
+        </div>
+        <div class="tree-children" data-children="${ceo.id}">
+          ${buildBranch(ceo.id,0)}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('teamContent').innerHTML=h;
+
+  // Toggle expand/collapse
+  document.querySelectorAll('.team-dir .tree-toggle').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const id=btn.dataset.toggle;
+      const container=document.querySelector(`[data-children="${id}"]`);
+      if(expandedNodes.has(id)){
+        expandedNodes.delete(id);
+        container.classList.add('collapsed');
+        btn.classList.remove('open');
+        btn.innerHTML='+ '+getDirectReports(id).length;
+      } else {
+        expandedNodes.add(id);
+        // Build children if not yet rendered
+        if(!container.innerHTML.trim()){
+          container.innerHTML=buildBranchLive(id,0);
+          bindTreeEvents(container);
+        }
+        container.classList.remove('collapsed');
+        btn.classList.add('open');
+        btn.innerHTML='− '+getDirectReports(id).length;
+      }
+    });
+  });
+
+  // Click person -> modal
+  document.querySelectorAll('.team-dir .tree-person').forEach(el=>{
+    el.addEventListener('click',()=>openModal(el.dataset.id));
+  });
+
+  // Dept buttons scroll to first person in that dept
+  document.querySelectorAll('.team-dir .org-dept-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const dept=btn.dataset.dept;
+      // Expand all ancestors for people in this dept
+      people.filter(p=>inDept(p,dept)).forEach(p=>{
+        let cur=p;
+        while(cur.reportsTo){
+          expandedNodes.add(cur.reportsTo);
+          cur=people.find(x=>x.id===cur.reportsTo);
+        }
+      });
+      renderOrgChart('');
+      document.getElementById('searchInput').value='';
+      // Highlight dept people
+      setTimeout(()=>{
+        const nodes=document.querySelectorAll('.team-dir .tree-person');
+        let first=null;
+        nodes.forEach(n=>{
+          const p=people.find(x=>x.id===n.dataset.id);
+          if(p&&inDept(p,dept)){
+            n.classList.add('highlight');
+            if(!first) first=n;
+          }
+        });
+        if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+      },50);
+    });
+  });
+}
+
+function buildBranchLive(parentId,depth){
+  const children=getDirectReports(parentId);
+  let h='';
+  children.forEach(p=>{
+    const kids=getDirectReports(p.id);
+    const isExpanded=expandedNodes.has(p.id);
+    const email=getEmail(p);
+    h+=`<div class="tree-branch${p.isNew?' tree-new':''}">
+      <div class="tree-person" data-id="${p.id}">
+        <div class="tree-avatar ${avatarLevel(p)}">${avatarHTML(p)}</div>
+        <div class="tree-info">
+          <div class="tree-name">${p.name}</div>
+          <div class="tree-title">${p.title}</div>
+          ${email?`<div class="tree-email">${email}</div>`:''}
+        </div>
+        ${kids.length?`<div class="tree-toggle${isExpanded?' open':''}" data-toggle="${p.id}">${isExpanded?'−':'+'} ${kids.length}</div>`:''}
+      </div>
+      <div class="tree-children${isExpanded?'':' collapsed'}" data-children="${p.id}">
+        ${isExpanded?buildBranchLive(p.id,depth+1):''}
+      </div>
+    </div>`;
+  });
+  return h;
+}
+function bindTreeEvents(container){
+  container.querySelectorAll('.tree-toggle').forEach(btn=>{
+    btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const id=btn.dataset.toggle;
+      const c=document.querySelector(`[data-children="${id}"]`);
+      if(expandedNodes.has(id)){
+        expandedNodes.delete(id);c.classList.add('collapsed');btn.classList.remove('open');
+        btn.innerHTML='+ '+getDirectReports(id).length;
+      } else {
+        expandedNodes.add(id);
+        if(!c.innerHTML.trim()){c.innerHTML=buildBranchLive(id,0);bindTreeEvents(c)}
+        c.classList.remove('collapsed');btn.classList.add('open');
+        btn.innerHTML='− '+getDirectReports(id).length;
+      }
+    });
+  });
+  container.querySelectorAll('.tree-person').forEach(el=>{
+    el.addEventListener('click',()=>openModal(el.dataset.id));
+  });
+}
+
+// ─── Modal ───
+function openModal(id){
+  const p=people.find(x=>x.id===id);
+  if(!p) return;
+  const email=getEmail(p), mgr=getManager(p), reports=getDirectReports(p.id);
+  let rh='';
+  if(reports.length){
+    rh=`<div class="modal-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="modal-row-label">Reports</span>
+      <span class="modal-row-value">${reports.map(r=>`<span style="cursor:pointer;color:var(--oc-teal)" onclick="openModal('${r.id}')">${r.name}</span>`).join(', ')}</span>
+    </div>`;
+  }
+  document.getElementById('modal').innerHTML=`
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+      <div class="modal-avatar" style="overflow:hidden">${avatarHTML(p)}</div>
+      <div class="modal-name">${p.name}${p.isNew?' <span style="font-size:.6rem;background:var(--oc-gold);color:var(--oc-black);padding:.1rem .4rem;border-radius:4px;vertical-align:middle;font-family:Nunito Sans,sans-serif">NEW</span>':''}</div>
+      <div class="modal-title">${p.title}</div>
+    </div>
+    <div class="modal-body">
+      ${email?`<div class="modal-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span class="modal-row-label">Email</span><span class="modal-row-value"><a href="mailto:${email}">${email}</a></span></div>`:''}
+      <div class="modal-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 0 0-8 0v2"/></svg><span class="modal-row-label">Dept</span><span class="modal-row-value">${deptLabel(p)}</span></div>
+      ${mgr?`<div class="modal-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="modal-row-label">Manager</span><span class="modal-row-value"><span style="cursor:pointer;color:var(--oc-teal)" onclick="openModal('${mgr.id}')">${mgr.name}</span> &middot; ${mgr.title}</span></div>`:''}
+      ${rh}
+      ${email?`<div class="modal-actions">
+        <a class="modal-btn primary" href="mailto:${email}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Send Email</a>
+        <button class="modal-btn secondary" onclick="navigator.clipboard.writeText('${email}');this.textContent='Copied!'">Copy Email</button>
+      </div>`:''}
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// ─── View switching & search ───
+document.querySelectorAll('.team-dir .view-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.team-dir .view-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    currentView=tab.dataset.view;
+    render();
+  });
+});
+let searchTO;
+document.getElementById('searchInput').addEventListener('input',()=>{clearTimeout(searchTO);searchTO=setTimeout(render,200)});
+
+function render(){
+  const s=document.getElementById('searchInput').value;
+  if(currentView==='directory') renderDirectory(currentDept,s);
+  else renderOrgChart(s);
+}
+render();
+</script>
+</body>
+</html>

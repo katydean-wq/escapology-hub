@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  .doc-table { width: 100%; border-collapse: collapse; margin-bottom: 48px; }
+  .doc-table th, .doc-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border-soft); font-size: 13px; }
+  .doc-table th { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--brass); font-weight: 700; background: var(--iron-deep); }
+  .doc-table tr:hover td { background: rgba(183,119,41,0.04); }
+  .doc-table td a { color: var(--paper); font-weight: 600; }
+  .doc-table td a:hover { color: var(--brass-light); }
+  .doc-filters { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-chip { padding: 6px 14px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; border: 1px solid var(--border); border-radius: 2px; color: var(--muted-strong); background: var(--iron-deep); cursor: pointer; }
+  .filter-chip.active { background: var(--brass); color: var(--iron-black); border-color: var(--brass); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content">
+      <div class="breadcrumb"><a href="index.html">The Hub</a> › Documents</div>
+      <h1 class="page-title">Find a <span class="accent">document.</span></h1>
+      <p class="page-subtitle">Search or filter every document in The Hub — SOPs, templates, training, and brand assets.</p>
+
+      <div class="doc-filters">
+        <button class="filter-chip active">All</button>
+        <button class="filter-chip">Marketing</button>
+        <button class="filter-chip">Operations</button>
+        <button class="filter-chip">Training</button>
+        <button class="filter-chip">Games</button>
+        <button class="filter-chip">Venue Development</button>
+        <button class="filter-chip">Forms</button>
+      </div>
+
+      <table class="doc-table">
+        <thead>
+          <tr><th style="width:46%;">Document</th><th>Section</th><th>Type</th><th>Updated</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="#">Brand Standards Manual v1.0</a></td><td>Marketing</td><td>PDF</td><td>Apr 2026</td></tr>
+          <tr><td><a href="#">Standard Operating Procedures — Core</a></td><td>Operations</td><td>Google Doc</td><td>Apr 2026</td></tr>
+          <tr><td><a href="#">Venue Calibration Master Log</a></td><td>Operations</td><td>Google Sheet</td><td>Apr 2026</td></tr>
+          <tr><td><a href="#">GM Certification Curriculum</a></td><td>Training</td><td>LMS Course</td><td>Mar 2026</td></tr>
+          <tr><td><a href="#">Master Training Plan — 90 Day</a></td><td>Training</td><td>PDF</td><td>Mar 2026</td></tr>
+          <tr><td><a href="#">Grand Opening Marketing Kit</a></td><td>Marketing</td><td>Drive Folder</td><td>Mar 2026</td></tr>
+          <tr><td><a href="#">Evergreen Social Templates</a></td><td>Marketing</td><td>Canva</td><td>Mar 2026</td></tr>
+          <tr><td><a href="#">Mother's Day Campaign Assets</a></td><td>Marketing</td><td>Drive Folder</td><td>Mar 2026</td></tr>
+          <tr><td><a href="#">Group Sales Pitch Deck</a></td><td>Operations</td><td>Slides</td><td>Feb 2026</td></tr>
+          <tr><td><a href="#">Volume Pricing Matrix</a></td><td>Operations</td><td>Google Sheet</td><td>Feb 2026</td></tr>
+          <tr><td><a href="#">Marketing Request Form</a></td><td>Forms</td><td>Form</td><td>Feb 2026</td></tr>
+          <tr><td><a href="#">Safety &amp; Compliance SOP Q2 2026</a></td><td>Operations</td><td>PDF</td><td>Apr 2026</td></tr>
+          <tr><td><a href="#">Reset Guide — Batman</a></td><td>Games</td><td>PDF</td><td>Jan 2026</td></tr>
+          <tr><td><a href="#">Reset Guide — Pirates Curse</a></td><td>Games</td><td>PDF</td><td>Jan 2026</td></tr>
+          <tr><td><a href="#">Pre-Opening Checklist</a></td><td>Venue Development</td><td>PDF</td><td>Nov 2025</td></tr>
+          <tr><td><a href="#">Vendor Directory</a></td><td>Venue Development</td><td>Google Sheet</td><td>Nov 2025</td></tr>
+        </tbody>
+      </table>
+
+      <p style="color:var(--muted); font-size: 12px; text-align:center;">Can't find what you need? <a href="mailto:support@escapology.com">Ask HQ →</a></p>
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+</body>
+</html>

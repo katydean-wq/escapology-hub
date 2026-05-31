@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operations &amp; Training — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ---- pillar cards ---- */
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 24px; }
+  .pillar {
+    position: relative;
+    padding: 32px 26px 28px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.48), rgba(30,36,49,0.65));
+    border: 1px solid rgba(255,254,246,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pillar:hover { border-color: var(--brass); transform: translateY(-2px); }
+  .pillar::before {
+    content: '';
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .pillar-number {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 52px;
+    line-height: 1;
+    background: linear-gradient(180deg, rgba(183,119,41,0.35), rgba(183,119,41,0.08));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+  .pillar-icon.pi-brass   { background: rgba(183,119,41,0.18); color: var(--brass-light); }
+  .pillar-icon.pi-emerald { background: rgba(33,93,88,0.28); color: var(--florescent); border-color: rgba(6,220,206,0.25); }
+  .pillar-icon.pi-gold    { background: rgba(245,167,55,0.16); color: var(--gold); }
+  .pillar-icon.pi-brick   { background: rgba(141,19,36,0.22); color: #D65566; border-color: rgba(141,19,36,0.4); }
+  .pillar-icon.pi-iron    { background: rgba(111,129,120,0.22); color: var(--steel); }
+  .pillar-icon.pi-paper   { background: rgba(255,254,246,0.08); color: var(--paper); }
+  .pillar h3 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: 24px;
+    line-height: 1.15; color: var(--paper);
+    margin-bottom: 10px;
+  }
+  .pillar .tagline {
+    font-family: 'Alverata', serif;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+    font-weight: 600;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .pillar p { font-size: 13px; line-height: 1.6; color: var(--muted-strong); margin-bottom: 18px; }
+  .pillar .arrow { font-size: 16px; color: var(--brass-light); font-weight: 700; transition: transform 0.15s; display: inline-block; }
+  .pillar:hover .arrow { transform: translateX(4px); }
+
+  /* ---- detail sections ---- */
+  .detail-section { margin-bottom: 64px; scroll-margin-top: 80px; }
+  .detail-header {
+    display: flex; align-items: flex-start; gap: 28px;
+    padding: 32px 0 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .detail-num {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: 56px; line-height: 1;
+    background: var(--grad-metal);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    flex-shrink: 0;
+  }
+  .detail-header h2 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: 34px;
+    color: var(--paper);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .detail-header .subtitle {
+    font-size: 14px;
+    color: var(--muted-strong);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+  .detail-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .detail-body.single-col { grid-template-columns: 1fr; }
+
+  /* key stat callout */
+  .stat-row {
+    display: flex; gap: 18px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .stat-card {
+    flex: 1; min-width: 160px;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.42), rgba(30,36,49,0.6));
+    border: 1px solid rgba(255,254,246,0.08);
+    border-radius: 3px;
+    text-align: center;
+  }
+  .stat-card .stat-val {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: 36px;
+    background: var(--grad-metal);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+  .stat-card .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  @media (max-width: 1100px) {
+    .pillars { grid-template-columns: repeat(2, 1fr); }
+    .detail-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .pillars { grid-template-columns: 1fr; }
+    .detail-header { flex-direction: column; gap: 12px; }
+    .stat-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content">
+
+      <div class="sp-hero">
+        <div class="inner">
+          <div class="breadcrumb"><a href="index.html">The Hub</a> › Operations &amp; Training</div>
+          <h1 class="page-title">Run your venue<br><span class="accent">like clockwork.</span></h1>
+          <p class="page-subtitle">Six pillars that drive venue performance — from hiring the right people to pricing for profit. Each one comes with playbooks, templates, and the tools to execute.</p>
+        </div>
+      </div>
+
+      <!-- ============ SIX PILLARS OVERVIEW ============ -->
+      <div class="section-head">
+        <h2>The Six Pillars</h2>
+      </div>
+
+      <div class="pillars">
+        <a href="#hiring" class="pillar">
+          <div class="pillar-icon pi-brass">☗</div>
+          <span class="tagline">Pillar 01</span>
+          <h3>Make Hiring Your Most Important Decision</h3>
+          <p>The right people are everything. Job postings, interview guides, and onboarding playbooks to build a team that delivers.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#kpis" class="pillar">
+          <div class="pillar-icon pi-emerald">◉</div>
+          <span class="tagline">Pillar 02</span>
+          <h3>Know Your Numbers</h3>
+          <p>KPI tracking, Resova reporting, and daily dashboards so you always know where your venue stands.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#guest-experience" class="pillar">
+          <div class="pillar-icon pi-gold">★</div>
+          <span class="tagline">Pillar 03</span>
+          <h3>Guest Experience Excellence</h3>
+          <p>Training your team to deliver five-star experiences from the moment guests walk in to their post-game photo.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#reviews" class="pillar">
+          <div class="pillar-icon pi-brick">♛</div>
+          <span class="tagline">Pillar 04</span>
+          <h3>Reviews = Revenue</h3>
+          <p>How to earn 5-star Google reviews that boost your local search visibility and drive bookings.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#hours" class="pillar">
+          <div class="pillar-icon pi-iron">⚙</div>
+          <span class="tagline">Pillar 05</span>
+          <h3>Maximize Hours &amp; Your Game Calendar</h3>
+          <p>Optimize your hours of operation and game scheduling to capture every possible booking.</p>
+          <span class="arrow">→</span>
+        </a>
+        <a href="#pricing" class="pillar">
+          <div class="pillar-icon pi-paper">$</div>
+          <span class="tagline">Pillar 06</span>
+          <h3>Price for Profit</h3>
+          <p>Pricing strategy, dynamic pricing guidance, and volume discount frameworks that protect your margins.</p>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <!-- ============ PILLAR 1: HIRING ============ -->
+      <div class="detail-section" id="hiring">
+        <div class="detail-header">
+          <div class="detail-num">01</div>
+          <div>
+            <h2>Make Hiring Your Most Important Decision</h2>
+            <p class="subtitle">Your team is your product. Every guest interaction is shaped by the people you hire. This section gives you the tools to find, evaluate, and onboard the right people — consistently.</p>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-val">4–6</div>
+            <div class="stat-label">GMs per venue avg.</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">90</div>
+            <div class="stat-label">Day onboarding plan</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">100%</div>
+            <div class="stat-label">Cert rate target</div>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>Job Posting Templates</h4>
+            <p>Pre-written, brand-approved job descriptions for Game Master, Shift Lead, and Venue Manager roles. Ready to post on Indeed, LinkedIn, or your local board.</p>
+            <div class="tile-meta">Templates · 3 roles</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Interview Guide &amp; Scorecard</h4>
+            <p>Behavioral interview questions, scoring rubric, and red/green flag checklist. Designed for hospitality hires who thrive in fast-paced environments.</p>
+            <div class="tile-meta">Guide · Printable</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Onboarding Checklist</h4>
+            <p>Day-by-day checklist for the first two weeks — from system logins to shadowing their first game. Nothing slips through the cracks.</p>
+            <div class="tile-meta">Checklist · 14 days</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>GM Certification Program</h4>
+            <p>The full certification pathway: modules, checkpoints, practical evaluations, and sign-off requirements before a GM runs a room solo.</p>
+            <div class="tile-meta">Required · 4 weeks</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Shift Lead Development Path</h4>
+            <p>For GMs stepping into leadership. Covers scheduling, team coaching, escalation protocols, and opening/closing responsibilities.</p>
+            <div class="tile-meta">Optional · 2 weeks</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Manager Playbook</h4>
+            <p>P&amp;L ownership, hiring authority, scheduling strategy, and venue leadership standards. The operating manual for venue managers.</p>
+            <div class="tile-meta">Required · Ongoing</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ PILLAR 2: KPIs ============ -->
+      <div class="detail-section" id="kpis">
+        <div class="detail-header">
+          <div class="detail-num">02</div>
+          <div>
+            <h2>Know Your Numbers</h2>
+            <p class="subtitle">You can't improve what you don't measure. Track the KPIs that matter, pull reports from Resova, and use data to make better decisions every week.</p>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-val">7</div>
+            <div class="stat-label">Core KPIs to track</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">Weekly</div>
+            <div class="stat-label">Reporting cadence</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">Resova</div>
+            <div class="stat-label">Primary data source</div>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>KPI Dashboard Template</h4>
+            <p>Pre-built Google Sheet tracking revenue per game, occupancy rate, average booking value, repeat guest rate, and more. Auto-calculates weekly trends.</p>
+            <div class="tile-meta">Google Sheet · Live</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Resova Reporting Guide</h4>
+            <p>How to pull the reports you need from Resova — bookings by game, revenue by day, no-show rates, and promo code usage. Step-by-step with screenshots.</p>
+            <div class="tile-meta">Guide · Resova</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Weekly Venue Scorecard</h4>
+            <p>One-page scorecard comparing your venue's performance to network benchmarks. Fill out weekly and review with your team.</p>
+            <div class="tile-meta">Template · PDF</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Revenue Tracking Sheet</h4>
+            <p>Daily revenue log with room-level breakdowns. Built for quick daily entry — takes 2 minutes at close.</p>
+            <div class="tile-meta">Google Sheet</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Newly Opened Venue Targets</h4>
+            <p>First 90-day performance benchmarks and milestones for new locations. What "good" looks like in months 1, 2, and 3.</p>
+            <div class="tile-meta">Benchmarks</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Monthly P&amp;L Review Guide</h4>
+            <p>How to read your P&amp;L, where to focus, and what to flag for HQ. Built for operators, not accountants.</p>
+            <div class="tile-meta">Guide · Finance</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ PILLAR 3: GUEST EXPERIENCE ============ -->
+      <div class="detail-section" id="guest-experience">
+        <div class="detail-header">
+          <div class="detail-num">03</div>
+          <div>
+            <h2>Guest Experience Excellence</h2>
+            <p class="subtitle">Every touchpoint matters. Train your team to deliver memorable experiences that turn first-timers into repeat guests and evangelists.</p>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>Guest Journey Map</h4>
+            <p>The complete guest experience from booking to post-game — every touchpoint, every moment that matters, and what "excellent" looks like at each one.</p>
+            <div class="tile-meta">Framework · Visual</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Hospitality Standards Playbook</h4>
+            <p>Greeting scripts, lobby energy standards, pre-game briefing best practices, and the post-game celebration protocol that drives 5-star reviews.</p>
+            <div class="tile-meta">Playbook · All Staff</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Service Recovery Guide</h4>
+            <p>When things go wrong — tech failures, unhappy guests, long waits. Step-by-step recovery scripts and empowerment guidelines for front-line staff.</p>
+            <div class="tile-meta">Guide · Critical</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>GM Hint-Giving Mastery</h4>
+            <p>The art of the hint: when to give one, how to deliver it, and how to keep the energy up without giving the puzzle away. Game-by-game cheat sheets included.</p>
+            <div class="tile-meta">Training · By Game</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Guest Experience Scorecard</h4>
+            <p>Mystery shop evaluation form. Use it for self-assessment or have a team member score a live session. 25-point checklist.</p>
+            <div class="tile-meta">Scorecard · PDF</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Incident &amp; Safety Response</h4>
+            <p>What to do when things go sideways — from stuck puzzles to medical events. Escalation paths, documentation requirements, and post-incident review.</p>
+            <div class="tile-meta">SOP · Critical</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ PILLAR 4: REVIEWS ============ -->
+      <div class="detail-section" id="reviews">
+        <div class="detail-header">
+          <div class="detail-num">04</div>
+          <div>
+            <h2>Reviews = Revenue</h2>
+            <p class="subtitle">Google reviews are the #1 driver of local search visibility. More 5-star reviews means more people find you, more people book, and your cost per acquisition drops.</p>
+          </div>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-val">4.8★</div>
+            <div class="stat-label">Network target rating</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">+23%</div>
+            <div class="stat-label">Booking lift at 4.8+ stars</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">#1</div>
+            <div class="stat-label">Local SEO ranking factor</div>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>Review Generation Playbook</h4>
+            <p>The post-game ask strategy that works: when to ask, who asks, the exact script, and how to make it frictionless with a QR code at checkout.</p>
+            <div class="tile-meta">Playbook · Proven</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Google Business Profile Guide</h4>
+            <p>How to optimize your GBP listing — photos, posts, Q&amp;A, and response templates. The fundamentals that most venues get wrong.</p>
+            <div class="tile-meta">Guide · SEO</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Review Response Templates</h4>
+            <p>Copy-and-customize response templates for 5-star, 4-star, 3-star, and negative reviews. Professional, on-brand, and fast to deploy.</p>
+            <div class="tile-meta">Templates · 12 variants</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>QR Code &amp; Signage Kit</h4>
+            <p>Print-ready review prompt signage and QR codes that link directly to your Google review page. Tent cards, counter signs, and receipt inserts.</p>
+            <div class="tile-meta">Assets · Print-Ready</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Negative Review Recovery SOP</h4>
+            <p>When a 1-star lands: response timeline, escalation criteria, when to take it offline, and how to turn a bad review into a return visit.</p>
+            <div class="tile-meta">SOP · Time-Sensitive</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Monthly Review Tracker</h4>
+            <p>Track review volume, average rating, and response rate over time. Benchmark against the network and spot trends before they become problems.</p>
+            <div class="tile-meta">Google Sheet</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ PILLAR 5: HOURS & CALENDAR ============ -->
+      <div class="detail-section" id="hours">
+        <div class="detail-header">
+          <div class="detail-num">05</div>
+          <div>
+            <h2>Maximize Hours &amp; Your Game Calendar</h2>
+            <p class="subtitle">Every empty room is lost revenue. Optimize your operating hours, game rotation, and room availability to capture demand — especially during peak windows.</p>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>Hours of Operation Guide</h4>
+            <p>Data-backed recommendations for opening hours by day of week and season. Includes guidance on when to extend hours, when to cut, and how to test.</p>
+            <div class="tile-meta">Guide · Seasonal</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Game Calendar Optimization</h4>
+            <p>How to set up your Resova game calendar for maximum throughput — session spacing, buffer times, reset windows, and staggered start strategies.</p>
+            <div class="tile-meta">Resova · Setup</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Peak vs. Off-Peak Playbook</h4>
+            <p>Strategies for filling off-peak slots (corporate groups, field trips, date nights) and maximizing yield during peak hours (weekends, holidays).</p>
+            <div class="tile-meta">Strategy · Revenue</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Staffing-to-Schedule Matrix</h4>
+            <p>How many GMs you need on shift based on your game calendar. Avoids over-staffing slow days and under-staffing peak nights.</p>
+            <div class="tile-meta">Template · Scheduling</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Holiday &amp; Seasonal Calendar</h4>
+            <p>Pre-planned extended hours, special events, and promo windows for every major holiday and school break throughout the year.</p>
+            <div class="tile-meta">Calendar · Annual</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Room Downtime Tracker</h4>
+            <p>Track and minimize room downtime due to maintenance, resets, or tech issues. Every hour a room is down costs real dollars.</p>
+            <div class="tile-meta">Google Sheet</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ PILLAR 6: PRICING ============ -->
+      <div class="detail-section" id="pricing">
+        <div class="detail-header">
+          <div class="detail-num">06</div>
+          <div>
+            <h2>Price for Profit</h2>
+            <p class="subtitle">Your pricing strategy directly impacts revenue, occupancy, and guest perception. Get it right with data-driven frameworks that protect your margins while staying competitive.</p>
+          </div>
+        </div>
+
+        <div class="detail-body">
+          <a class="tile" href="#">
+            <h4>Pricing Strategy Overview</h4>
+            <p>The Escapology pricing philosophy: value-based pricing, peak/off-peak tiers, and why discounting is almost never the answer.</p>
+            <div class="tile-meta">Framework · Core</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Volume Pricing Matrix</h4>
+            <p>Approved discount tiers by group size and day of week. Standardized across the network so you never have to guess.</p>
+            <div class="tile-meta">Matrix · Approved</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Dynamic Pricing Guide</h4>
+            <p>When and how to adjust pricing based on demand — weekday vs. weekend, seasonal peaks, and last-minute availability. Includes Resova setup instructions.</p>
+            <div class="tile-meta">Guide · Resova</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Group Sales Pricing Kit</h4>
+            <p>Pitch decks, pricing sheets, and proposal templates for corporate events, birthday parties, and team-building packages.</p>
+            <div class="tile-meta">Sales Kit</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Promo &amp; Discount Policy</h4>
+            <p>What's approved, what needs HQ sign-off, and what's off limits. Includes guidance on promo codes, gift cards, and partner offers.</p>
+            <div class="tile-meta">Policy · Compliance</div>
+          </a>
+          <a class="tile" href="#">
+            <h4>Competitive Pricing Audit</h4>
+            <p>How to benchmark your pricing against local competitors. Template for tracking competitor rates and positioning your venue as the premium option.</p>
+            <div class="tile-meta">Template · Quarterly</div>
+          </a>
+        </div>
+      </div>
+
+      <!-- ============ QUICK LINKS ============ -->
+      <div class="section-head">
+        <h2>Systems &amp; Tools</h2>
+      </div>
+      <div class="resource-grid">
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-emerald">⚙</div>
+          <h4>Resova Booking System</h4>
+          <p>Access your booking dashboard, pull reports, and manage your game calendar.</p>
+          <div class="resource-meta">Resova · Login</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-brass">▦</div>
+          <h4>Escapology University LMS</h4>
+          <p>All training courses, certifications, and progress tracking in one place.</p>
+          <div class="resource-meta">LMS · Login</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-gold">♪</div>
+          <h4>Soundtrack Music System</h4>
+          <p>Licensed in-venue music — setup, rotation, and playlist management.</p>
+          <div class="resource-meta">Rights-Managed</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-brick">◆</div>
+          <h4>Soulkal Merchandise Store</h4>
+          <p>Order branded merch for resale or staff uniforms.</p>
+          <div class="resource-meta">B2B Portal</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-iron">⚙</div>
+          <h4>Venue Calibration Log</h4>
+          <p>Equipment calibration schedule and maintenance log by game and room.</p>
+          <div class="resource-meta">Maintenance</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-paper">◇</div>
+          <h4>Kids Mode Assets</h4>
+          <p>Age-adjusted game content, scoring parameters, and parent-facing materials.</p>
+          <div class="resource-meta">All Games</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-emerald">☏</div>
+          <h4>HQ Ops Contacts</h4>
+          <p>Who to call when something breaks — by system and by region.</p>
+          <div class="resource-meta">Directory</div>
+        </a>
+        <a class="resource-card" href="#">
+          <div class="resource-icon ri-brass">✎</div>
+          <h4>Submit a Support Ticket</h4>
+          <p>Report an issue or request an on-site visit from HQ.</p>
+          <div class="resource-meta">24hr Response</div>
+        </a>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+</body>
+</html>
