@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metrics &amp; League Reports — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+.metrics-page .kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 48px;
+}
+.metrics-page .kpi {
+  position: relative;
+  padding: 24px 22px;
+  background: linear-gradient(180deg, rgba(59,69,89,0.45), rgba(30,36,49,0.6));
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.metrics-page .kpi::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+.metrics-page .kpi.kpi-brass::before { background: var(--grad-metal); }
+.metrics-page .kpi.kpi-emerald::before { background: linear-gradient(90deg, var(--emerald), var(--florescent)); }
+.metrics-page .kpi.kpi-gold::before { background: linear-gradient(90deg, var(--gold), #FFD97D); }
+.metrics-page .kpi.kpi-brick::before { background: linear-gradient(90deg, var(--brick), #D65566); }
+.metrics-page .kpi-label {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.metrics-page .kpi-value {
+  font-family: 'Alverata', 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 38px;
+  color: var(--paper);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.metrics-page .kpi-delta {
+  font-size: 12px;
+  font-weight: 700;
+}
+.metrics-page .kpi-delta.pos { color: var(--florescent); }
+.metrics-page .kpi-delta.neg { color: var(--brick); }
+
+.metrics-page .report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 48px;
+}
+.metrics-page .report-card {
+  position: relative;
+  padding: 28px 24px;
+  background: linear-gradient(180deg, rgba(59,69,89,0.42), rgba(30,36,49,0.6));
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  transition: border-color 0.2s, transform 0.2s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.metrics-page .report-card:hover {
+  border-color: var(--brass);
+  transform: translateY(-2px);
+}
+.metrics-page .report-card.featured {
+  background: var(--grad-brass);
+  border-color: var(--brass-deep);
+  grid-column: span 2;
+}
+.metrics-page .report-card.featured::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% 15%, rgba(255,254,246,0.2), transparent 55%);
+  pointer-events: none;
+}
+.metrics-page .report-card .report-month {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--florescent);
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.metrics-page .report-card.featured .report-month {
+  color: rgba(255,254,246,0.7);
+}
+.metrics-page .report-card h3 {
+  font-family: 'Alverata', 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--paper);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.metrics-page .report-card p {
+  font-size: 13px;
+  color: var(--muted-strong);
+  line-height: 1.55;
+  margin-bottom: 20px;
+  flex: 1;
+}
+.metrics-page .report-card .report-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  transition: color 0.15s;
+}
+.metrics-page .report-card:hover .report-cta {
+  color: var(--gold);
+}
+.metrics-page .report-card.featured .report-cta {
+  color: var(--paper);
+}
+.metrics-page .report-card .report-cta .arr {
+  transition: transform 0.15s;
+}
+.metrics-page .report-card:hover .report-cta .arr {
+  transform: translateX(4px);
+}
+
+.metrics-page .highlights {
+  position: relative;
+  padding: 28px 30px;
+  background: linear-gradient(135deg, rgba(183,119,41,0.12), rgba(183,119,41,0.04));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brass);
+  border-radius: var(--radius);
+  margin-bottom: 48px;
+}
+.metrics-page .highlights h3 {
+  font-family: 'Alverata', serif;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  margin-bottom: 16px;
+}
+.metrics-page .hl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+}
+.metrics-page .hl-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 14px;
+  color: var(--muted-strong);
+  line-height: 1.5;
+}
+.metrics-page .hl-item .check {
+  color: var(--gold);
+  font-size: 16px;
+  flex-shrink: 0;
+  font-weight: 800;
+  margin-top: 1px;
+}
+.metrics-page .hl-item strong {
+  color: var(--paper);
+}
+
+.metrics-page .archive-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.metrics-page .archive-table th,
+.metrics-page .archive-table td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 13px;
+}
+.metrics-page .archive-table th {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--brass-light);
+  font-weight: 800;
+  background: rgba(59,69,89,0.4);
+  border-bottom: 1px solid var(--border);
+}
+.metrics-page .archive-table tr:hover td {
+  background: rgba(183,119,41,0.04);
+}
+.metrics-page .archive-table td a {
+  color: var(--paper);
+  font-weight: 600;
+}
+.metrics-page .archive-table td a:hover {
+  color: var(--brass-light);
+}
+
+@media (max-width: 1100px) {
+  .metrics-page .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .metrics-page .report-grid { grid-template-columns: 1fr; }
+  .metrics-page .report-card.featured { grid-column: span 1; }
+  .metrics-page .hl-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content">
+      <div class="metrics-page">
+
+        <div class="sp-hero">
+          <div class="inner">
+            <div class="breadcrumb"><a href="index.html">The Hub</a> › Metrics &amp; Reports</div>
+            <h1 class="page-title">Metrics &amp; <span class="accent">League Reports.</span></h1>
+            <p class="page-subtitle">System-wide performance data, franchise league rankings, and monthly reports from HQ.</p>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-row">
+          <div class="kpi kpi-brass">
+            <div class="kpi-label">System Comp Sales (Apr)</div>
+            <div class="kpi-value">+6%</div>
+            <div class="kpi-delta pos">↑ 2-yr stacked +16%</div>
+          </div>
+          <div class="kpi kpi-emerald">
+            <div class="kpi-label">Top Franchise (Apr)</div>
+            <div class="kpi-value">$125K</div>
+            <div class="kpi-delta pos">San Antonio, TX</div>
+          </div>
+          <div class="kpi kpi-gold">
+            <div class="kpi-label">New Openings (Apr–May)</div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-delta pos">2 Apr + 3 May</div>
+          </div>
+          <div class="kpi kpi-brick">
+            <div class="kpi-label">Perfect 5-Star Venues</div>
+            <div class="kpi-value">12</div>
+            <div class="kpi-delta pos">5.0 Google rating</div>
+          </div>
+        </div>
+
+        <!-- April Highlights -->
+        <div class="highlights">
+          <h3>⭐ April 2026 Highlights</h3>
+          <div class="hl-grid">
+            <div class="hl-item"><span class="check">✓</span><p>System comparable sales: <strong>current year +6% YoY</strong>; two-year stacked <strong>+16%</strong></p></div>
+            <div class="hl-item"><span class="check">✓</span><p><strong>San Antonio, TX</strong> leads all franchise locations with <strong>$125,173</strong> in April sales</p></div>
+            <div class="hl-item"><span class="check">✓</span><p><strong>12 venues</strong> hold a perfect 5.0 Google rating — highest count this year</p></div>
+            <div class="hl-item"><span class="check">✓</span><p><strong>5 new store openings</strong>: Williamsburg VA, Rockefeller Center NY (April), Chattanooga TN, Waco TX, Raleigh NC (May)</p></div>
+          </div>
+        </div>
+
+        <!-- Reports -->
+        <div class="section-head">
+          <h2>League Reports</h2>
+        </div>
+        <div class="report-grid">
+          <a class="report-card featured" href="league-report.html">
+            <div class="report-month">Latest Report</div>
+            <h3>April 2026 — Franchise League Report</h3>
+            <p>Full system performance breakdown including franchise rankings, game performance index, league standings, and venue-level detail cards. Interactive dashboard with charts and sortable tables.</p>
+            <span class="report-cta">Open Full Report <span class="arr">→</span></span>
+          </a>
+          <a class="report-card" href="league-report.html">
+            <div class="report-month">Featured</div>
+            <h3>Game Performance Index</h3>
+            <p>See how each game in the catalog performs vs. expected revenue share. Identify top-performing and underperforming rooms.</p>
+            <span class="report-cta">View Index <span class="arr">→</span></span>
+          </a>
+          <a class="report-card" href="#">
+            <div class="report-month">March 2026</div>
+            <h3>March League Report</h3>
+            <p>System comp sales +4.8% YoY. Spring break surge drove record week for 14 venues.</p>
+            <span class="report-cta">View Report <span class="arr">→</span></span>
+          </a>
+          <a class="report-card" href="#">
+            <div class="report-month">February 2026</div>
+            <h3>February League Report</h3>
+            <p>Valentine's Day specials lifted group booking revenue. System comp +3.2% YoY.</p>
+            <span class="report-cta">View Report <span class="arr">→</span></span>
+          </a>
+          <a class="report-card" href="#">
+            <div class="report-month">January 2026</div>
+            <h3>January League Report</h3>
+            <p>Strong start to the year. New Year promo drove $180K in additional bookings systemwide.</p>
+            <span class="report-cta">View Report <span class="arr">→</span></span>
+          </a>
+        </div>
+
+        <!-- Archive -->
+        <div class="section-head">
+          <h2>Report Archive</h2>
+        </div>
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Period</th>
+              <th>Comp Sales YoY</th>
+              <th>Top Franchise</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="league-report.html">Franchise League Report</a></td>
+              <td>April 2026</td>
+              <td style="color:var(--florescent);">+6.0%</td>
+              <td>San Antonio, TX</td>
+              <td><a href="league-report.html" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+            <tr>
+              <td><a href="#">Franchise League Report</a></td>
+              <td>March 2026</td>
+              <td style="color:var(--florescent);">+4.8%</td>
+              <td>San Antonio, TX</td>
+              <td><a href="#" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+            <tr>
+              <td><a href="#">Franchise League Report</a></td>
+              <td>February 2026</td>
+              <td style="color:var(--florescent);">+3.2%</td>
+              <td>Pittsburgh, PA</td>
+              <td><a href="#" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+            <tr>
+              <td><a href="#">Franchise League Report</a></td>
+              <td>January 2026</td>
+              <td style="color:var(--florescent);">+2.9%</td>
+              <td>San Antonio, TX</td>
+              <td><a href="#" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+            <tr>
+              <td><a href="#">Franchise League Report</a></td>
+              <td>December 2025</td>
+              <td style="color:var(--florescent);">+5.4%</td>
+              <td>Orlando, FL</td>
+              <td><a href="#" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+            <tr>
+              <td><a href="#">Franchise League Report</a></td>
+              <td>November 2025</td>
+              <td style="color:var(--florescent);">+4.1%</td>
+              <td>Nashville, TN</td>
+              <td><a href="#" class="btn-ghost" style="padding:6px 14px;font-size:10px;">View →</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+</body>
+</html>

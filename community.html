@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Community — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ---- Community Page Styles ---- */
+
+  /* Layout: main feed + sidebar */
+  .community-page .community-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ---- Pinned Announcements ---- */
+  .community-page .pinned-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .community-page .pinned-item {
+    position: relative;
+    padding: 22px 24px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.38), rgba(30,36,49,0.55));
+    border: 1px solid var(--gold);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .community-page .pinned-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 95% 10%, rgba(245,167,55,0.1), transparent 45%);
+  }
+  .community-page .pinned-item:hover {
+    transform: translateY(-1px);
+  }
+  .community-page .pinned-item > * { position: relative; z-index: 1; }
+  .community-page .pinned-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .community-page .pin-icon {
+    font-size: 14px;
+    color: var(--gold);
+  }
+  .community-page .pinned-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--gold);
+  }
+  .community-page .pinned-date {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .community-page .pinned-item h4 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--paper);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .community-page .pinned-item p {
+    font-size: 13px;
+    color: var(--muted-strong);
+    line-height: 1.55;
+  }
+
+  /* ---- Category Cards ---- */
+  .community-page .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .community-page .category-card {
+    position: relative;
+    padding: 22px 20px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.38), rgba(30,36,49,0.55));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    overflow: hidden;
+  }
+  .community-page .category-card::after {
+    content: '';
+    position: absolute;
+    right: -50px; top: -50px;
+    width: 140px; height: 140px;
+    background:
+      radial-gradient(circle, transparent 48%, rgba(255,254,246,0.02) 50%, transparent 52%),
+      radial-gradient(circle, transparent 68%, rgba(255,254,246,0.015) 70%, transparent 72%);
+    pointer-events: none;
+  }
+  .community-page .category-card:hover {
+    border-color: var(--brass);
+    transform: translateY(-2px);
+    background: linear-gradient(180deg, rgba(59,69,89,0.55), rgba(30,36,49,0.7));
+  }
+  .community-page .category-card.active {
+    border-color: var(--brass);
+    background: linear-gradient(180deg, rgba(183,119,41,0.12), rgba(30,36,49,0.7));
+  }
+  .community-page .cat-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-bottom: 14px;
+    background: rgba(183,119,41,0.15);
+    color: var(--brass-light);
+    border: 1px solid var(--border);
+  }
+  .community-page .cat-icon.ci-emerald {
+    background: rgba(33,93,88,0.28);
+    color: var(--florescent);
+    border-color: rgba(6,220,206,0.25);
+  }
+  .community-page .cat-icon.ci-gold {
+    background: rgba(245,167,55,0.16);
+    color: var(--gold);
+  }
+  .community-page .cat-icon.ci-brick {
+    background: rgba(141,19,36,0.22);
+    color: #D65566;
+    border-color: rgba(141,19,36,0.4);
+  }
+  .community-page .cat-icon.ci-steel {
+    background: rgba(111,129,120,0.22);
+    color: var(--steel);
+  }
+  .community-page .cat-icon.ci-paper {
+    background: rgba(255,254,246,0.08);
+    color: var(--paper);
+  }
+  .community-page .category-card h4 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--paper);
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .community-page .cat-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    padding-top: 10px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .community-page .cat-meta strong {
+    color: var(--muted-strong);
+    font-weight: 700;
+  }
+
+  /* ---- Discussions Feed ---- */
+  .community-page .discussions-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .community-page .discussion-item {
+    display: grid;
+    grid-template-columns: 42px 1fr auto;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-soft);
+    align-items: start;
+    transition: background 0.15s;
+  }
+  .community-page .discussion-item:first-child { padding-top: 4px; }
+  .community-page .discussion-item:last-child { border-bottom: none; }
+  .community-page .discussion-item:hover {
+    background: rgba(183,119,41,0.03);
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: var(--radius);
+  }
+  .community-page .disc-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--grad-iron);
+    color: var(--brass-light);
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .community-page .disc-avatar.av-brass {
+    background: var(--grad-brass);
+    color: var(--paper);
+    border-color: var(--brass-deep);
+  }
+  .community-page .disc-avatar.av-emerald {
+    background: linear-gradient(135deg, var(--emerald), #0A3A36);
+    color: var(--florescent);
+    border-color: var(--emerald);
+  }
+  .community-page .disc-avatar.av-iron {
+    background: var(--grad-iron);
+    color: var(--brass-light);
+    border-color: var(--iron);
+  }
+  .community-page .disc-content h4 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--paper);
+    margin-bottom: 5px;
+    line-height: 1.3;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .community-page .disc-content h4:hover {
+    color: var(--brass-light);
+  }
+  .community-page .disc-byline {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .community-page .disc-byline .author {
+    color: var(--muted-strong);
+    font-weight: 600;
+  }
+  .community-page .disc-preview {
+    font-size: 13px;
+    color: var(--muted-strong);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .community-page .disc-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    padding-top: 2px;
+    white-space: nowrap;
+  }
+  .community-page .disc-time {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .community-page .disc-replies {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--brass-light);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .community-page .disc-replies .reply-icon {
+    font-size: 12px;
+    opacity: 0.8;
+  }
+
+  /* Discussion pill overrides for smaller inline use */
+  .community-page .disc-byline .pill {
+    font-size: 8px;
+    padding: 2px 6px;
+    margin-right: 0;
+    letter-spacing: 0.14em;
+  }
+
+  /* ---- Sidebar: Top Contributors ---- */
+  .community-page .sidebar-widget {
+    position: sticky;
+    top: 80px;
+  }
+  .community-page .widget-card {
+    background: linear-gradient(180deg, rgba(59,69,89,0.38), rgba(30,36,49,0.55));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  .community-page .widget-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 80% 10%, rgba(183,119,41,0.08), transparent 50%);
+  }
+  .community-page .widget-card > * { position: relative; z-index: 1; }
+  .community-page .widget-title {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .community-page .contributor-list {
+    list-style: none;
+  }
+  .community-page .contributor-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .community-page .contributor-item:last-child { border-bottom: none; }
+  .community-page .contributor-rank {
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--brass-light);
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .community-page .contributor-rank.rank-1 { color: var(--gold); }
+  .community-page .contributor-rank.rank-2 { color: var(--paper-warm); }
+  .community-page .contributor-rank.rank-3 { color: var(--brass); }
+  .community-page .contributor-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--grad-iron);
+    color: var(--brass-light);
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .community-page .contributor-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .community-page .contributor-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .community-page .contributor-venue {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .community-page .contributor-count {
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--brass-light);
+    flex-shrink: 0;
+  }
+  .community-page .contributor-count span {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    text-align: right;
+  }
+
+  /* Widget: Community Stats */
+  .community-page .stats-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .community-page .stat-block {
+    text-align: center;
+    flex: 1;
+  }
+  .community-page .stat-number {
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .community-page .stat-label {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--muted);
+  }
+
+  /* ---- Start Discussion Button ---- */
+  .community-page .start-btn-wrap {
+    margin-bottom: 8px;
+  }
+  .community-page .btn-new-discussion {
+    padding: 13px 28px;
+    font-size: 12px;
+    gap: 10px;
+  }
+  .community-page .btn-new-discussion .plus-icon {
+    font-size: 16px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  /* ---- Modal ---- */
+  .community-page .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2,20,20,0.85);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .community-page .modal-overlay.open {
+    display: flex;
+  }
+  .community-page .modal-box {
+    width: 100%;
+    max-width: 620px;
+    background: linear-gradient(180deg, #2A3245 0%, var(--iron-deep) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    animation: modalIn 0.25s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .community-page .modal-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 90% 5%, rgba(183,119,41,0.12), transparent 40%),
+      radial-gradient(circle at 10% 95%, rgba(6,220,206,0.05), transparent 40%);
+  }
+  .community-page .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    position: relative;
+    z-index: 1;
+  }
+  .community-page .modal-header h3 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--paper);
+  }
+  .community-page .modal-close {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border-soft);
+    background: rgba(2,20,20,0.5);
+    color: var(--muted-strong);
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .community-page .modal-close:hover {
+    border-color: var(--brass);
+    color: var(--paper);
+  }
+  .community-page .modal-body {
+    padding: 28px 28px 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .community-page .modal-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 22px;
+  }
+  .community-page .modal-form-group:last-of-type { margin-bottom: 0; }
+  .community-page .modal-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--brass-light);
+  }
+  .community-page .modal-label .req {
+    color: var(--brick);
+    margin-left: 2px;
+  }
+  .community-page .modal-input,
+  .community-page .modal-select,
+  .community-page .modal-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(2,20,20,0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    color: var(--paper);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .community-page .modal-input:focus,
+  .community-page .modal-select:focus,
+  .community-page .modal-textarea:focus {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px rgba(183,119,41,0.15);
+  }
+  .community-page .modal-input::placeholder,
+  .community-page .modal-textarea::placeholder {
+    color: var(--muted);
+  }
+  .community-page .modal-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23B77729' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .community-page .modal-select option {
+    background: var(--iron-deep);
+    color: var(--paper);
+  }
+  .community-page .modal-textarea {
+    min-height: 160px;
+    resize: vertical;
+  }
+  .community-page .modal-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 0 28px 28px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Success state inside modal */
+  .community-page .modal-success {
+    display: none;
+    text-align: center;
+    padding: 48px 28px 56px;
+    position: relative;
+    z-index: 1;
+  }
+  .community-page .modal-success.show { display: block; }
+  .community-page .modal-success .success-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(33,93,88,0.35);
+    border: 2px solid var(--florescent);
+    color: var(--florescent);
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .community-page .modal-success h4 {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--paper);
+    margin-bottom: 8px;
+  }
+  .community-page .modal-success p {
+    font-size: 13px;
+    color: var(--muted-strong);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  /* ---- Filter row ---- */
+  .community-page .filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .community-page .active-filter {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted-strong);
+  }
+  .community-page .active-filter.show { display: inline-flex; }
+  .community-page .active-filter .filter-name {
+    color: var(--brass-light);
+    font-weight: 700;
+  }
+  .community-page .clear-filter {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 3px 8px;
+    cursor: pointer;
+    font-family: 'Nunito Sans', sans-serif;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .community-page .clear-filter:hover {
+    border-color: var(--brass);
+    color: var(--paper);
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .community-page .community-layout {
+      grid-template-columns: 1fr;
+    }
+    .community-page .sidebar-widget {
+      position: static;
+    }
+    .community-page .category-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 720px) {
+    .community-page .category-grid {
+      grid-template-columns: 1fr;
+    }
+    .community-page .discussion-item {
+      grid-template-columns: 36px 1fr;
+    }
+    .community-page .disc-stats {
+      grid-column: 2;
+      flex-direction: row;
+      align-items: center;
+      gap: 14px;
+    }
+    .community-page .modal-box {
+      max-width: 100%;
+    }
+    .community-page .modal-header { padding: 20px 20px 16px; }
+    .community-page .modal-body { padding: 20px 20px 24px; }
+    .community-page .modal-actions { padding: 0 20px 24px; }
+    .community-page .filter-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content community-page">
+
+      <!-- ============ HERO ============ -->
+      <div class="sp-hero">
+        <div class="inner">
+          <div class="breadcrumb"><a href="index.html">The Hub</a> &rsaquo; Community</div>
+          <h1 class="page-title">Community <span class="accent">Hub</span></h1>
+          <p class="page-subtitle">Connect with fellow franchise owners, share best practices, swap marketing ideas, and stay in the loop with HQ announcements. Your network is your strongest asset.</p>
+        </div>
+      </div>
+
+      <!-- ============ PINNED ANNOUNCEMENTS ============ -->
+      <div class="section-head">
+        <h2>Pinned from HQ</h2>
+      </div>
+
+      <div class="pinned-list">
+        <div class="pinned-item">
+          <div class="pinned-header">
+            <span class="pin-icon">&#128204;</span>
+            <span class="pinned-label">HQ Announcement</span>
+            <span class="pinned-date">May 29, 2026</span>
+          </div>
+          <h4>Summer 2026 Marketing Campaign Kit Now Available</h4>
+          <p>The full Summer Escape campaign package is live on the Marketing page, including social templates, email sequences, in-venue signage, and the new "Beat the Heat" promotion guidelines. All assets are approved and ready to deploy. Questions? Post in Marketing Ideas below.</p>
+        </div>
+
+        <div class="pinned-item">
+          <div class="pinned-header">
+            <span class="pin-icon">&#128204;</span>
+            <span class="pinned-label">HQ Announcement</span>
+            <span class="pinned-date">May 26, 2026</span>
+          </div>
+          <h4>Q3 Franchise Owner Call &mdash; June 12 at 2:00 PM ET</h4>
+          <p>Save the date for the quarterly all-hands call. Agenda includes new game rollout timeline, updated revenue benchmarks, and a deep dive into the revamped loyalty program. Calendar invite incoming. Submit topics to Katy by June 5.</p>
+        </div>
+
+        <div class="pinned-item">
+          <div class="pinned-header">
+            <span class="pin-icon">&#128204;</span>
+            <span class="pinned-label">System Notice</span>
+            <span class="pinned-date">May 20, 2026</span>
+          </div>
+          <h4>Resova Platform Maintenance Window &mdash; June 1, 2:00&ndash;4:00 AM ET</h4>
+          <p>Scheduled maintenance on the Resova booking system. Expect brief downtime for online bookings. Walk-ins can still be processed manually. Please inform your front desk teams ahead of time.</p>
+        </div>
+      </div>
+
+      <!-- ============ DISCUSSION CATEGORIES ============ -->
+      <div class="section-head">
+        <h2>Discussion Channels</h2>
+        <a href="#discussions">Browse All Threads</a>
+      </div>
+
+      <div class="category-grid" id="categoryGrid">
+        <div class="category-card" data-category="general">
+          <div class="cat-icon">&#9776;</div>
+          <h4>General Discussion</h4>
+          <div class="cat-meta">
+            <span><strong>142</strong> topics</span>
+            <span>Last active 45m ago</span>
+          </div>
+        </div>
+
+        <div class="category-card" data-category="best-practices">
+          <div class="cat-icon ci-emerald">&#10004;</div>
+          <h4>Best Practices &amp; Tips</h4>
+          <div class="cat-meta">
+            <span><strong>89</strong> topics</span>
+            <span>Last active 1h ago</span>
+          </div>
+        </div>
+
+        <div class="category-card" data-category="marketing">
+          <div class="cat-icon ci-gold">&#9733;</div>
+          <h4>Marketing Ideas</h4>
+          <div class="cat-meta">
+            <span><strong>67</strong> topics</span>
+            <span>Last active 3h ago</span>
+          </div>
+        </div>
+
+        <div class="category-card" data-category="setup">
+          <div class="cat-icon">&#9881;</div>
+          <h4>Game Room Setup &amp; Design</h4>
+          <div class="cat-meta">
+            <span><strong>53</strong> topics</span>
+            <span>Last active 5h ago</span>
+          </div>
+        </div>
+
+        <div class="category-card" data-category="technical">
+          <div class="cat-icon ci-brick">&#9888;</div>
+          <h4>Technical Issues</h4>
+          <div class="cat-meta">
+            <span><strong>38</strong> topics</span>
+            <span>Last active 2h ago</span>
+          </div>
+        </div>
+
+        <div class="category-card" data-category="new-owner">
+          <div class="cat-icon ci-steel">&#9829;</div>
+          <h4>New Owner Corner</h4>
+          <div class="cat-meta">
+            <span><strong>31</strong> topics</span>
+            <span>Last active Yesterday</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ DISCUSSIONS + SIDEBAR LAYOUT ============ -->
+      <div class="section-head" id="discussions">
+        <h2>Recent Discussions</h2>
+      </div>
+
+      <div class="filter-row start-btn-wrap">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="btn btn-new-discussion" id="openModalBtn">
+            <span class="plus-icon">+</span> Start a Discussion
+          </button>
+          <div class="active-filter" id="activeFilter">
+            Showing: <span class="filter-name" id="filterName"></span>
+            <button class="clear-filter" id="clearFilter">Clear</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="community-layout">
+        <!-- Main Feed -->
+        <div class="discussions-feed">
+          <div class="discussions-list" id="discussionsList">
+
+            <div class="discussion-item" data-category="best-practices">
+              <div class="disc-avatar av-brass">MR</div>
+              <div class="disc-content">
+                <h4>Our Saturday upsell strategy that increased per-group revenue 22%</h4>
+                <div class="disc-byline">
+                  <span class="author">Mike R.</span> &middot; San Antonio, TX
+                  <span class="pill emerald">Best Practices</span>
+                </div>
+                <p class="disc-preview">We started offering a "mystery add-on" at check-in where groups can purchase a sealed envelope with an extra clue + a themed souvenir. Costs us about $2 to produce and we charge $9.99. On busy Saturdays we're seeing about 40% uptake...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">2h ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 14</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="marketing">
+              <div class="disc-avatar av-emerald">JL</div>
+              <div class="disc-content">
+                <h4>Has anyone tried TikTok ads for local reach? Results inside.</h4>
+                <div class="disc-byline">
+                  <span class="author">Jessica L.</span> &middot; Nashville, TN
+                  <span class="pill gold">Marketing</span>
+                </div>
+                <p class="disc-preview">Ran a 2-week TikTok campaign targeting 18-34 within a 15-mile radius. Spent $380 total and got 12 confirmed bookings we could directly attribute. The best-performing creative was a 15-second "escape fail" compilation...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">3h ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 21</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="technical">
+              <div class="disc-avatar av-iron">DP</div>
+              <div class="disc-content">
+                <h4>RFID reader intermittent failures on Batman &mdash; anyone else?</h4>
+                <div class="disc-byline">
+                  <span class="author">David P.</span> &middot; Jacksonville, FL
+                  <span class="pill brick">Technical</span>
+                </div>
+                <p class="disc-preview">Puzzle 4 in the Batman room, the RFID reader works about 70% of the time. We've cleaned the contacts and swapped cables but it's still inconsistent. Before I open a ticket, wanted to check if this is a known issue or isolated to us...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">5h ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 8</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="general">
+              <div class="disc-avatar av-brass">SB</div>
+              <div class="disc-content">
+                <h4>Staffing levels for peak summer &mdash; how many GMs per room?</h4>
+                <div class="disc-byline">
+                  <span class="author">Sarah B.</span> &middot; Reno, NV
+                  <span class="pill">General</span>
+                </div>
+                <p class="disc-preview">First summer as an owner and trying to plan staffing. Currently running 1 GM per 2 rooms but on weekends that feels stretched thin. What ratio do the rest of you run during peak season? Any tips on flex scheduling?</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">6h ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 19</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="setup">
+              <div class="disc-avatar av-emerald">TW</div>
+              <div class="disc-content">
+                <h4>Lobby redesign photos &mdash; before and after (Concord, NC)</h4>
+                <div class="disc-byline">
+                  <span class="author">Tom W.</span> &middot; Concord, NC
+                  <span class="pill steel">Setup &amp; Design</span>
+                </div>
+                <p class="disc-preview">Just finished a lobby refresh over our slow week. Went with the darker palette HQ recommended, added some ambient LED strips behind the trophy wall, and installed the new check-in kiosk. Photos attached. Total cost was around $4,200...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">Yesterday</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 27</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="new-owner">
+              <div class="disc-avatar av-iron">AN</div>
+              <div class="disc-content">
+                <h4>Week 3 open &mdash; lessons learned and what I wish I knew</h4>
+                <div class="disc-byline">
+                  <span class="author">Alex N.</span> &middot; Fort Worth, TX
+                  <span class="pill steel">New Owner</span>
+                </div>
+                <p class="disc-preview">Three weeks in and wanted to share some notes for anyone about to open. Biggest surprise: how much time you spend on non-game stuff. My top 3 tips so far: (1) over-hire by 20% for opening month, (2) have a dedicated review response person from day 1...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">Yesterday</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 33</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="marketing">
+              <div class="disc-avatar av-brass">KM</div>
+              <div class="disc-content">
+                <h4>Corporate team-building packages &mdash; pricing and structure that works</h4>
+                <div class="disc-byline">
+                  <span class="author">Karen M.</span> &middot; Columbus, OH
+                  <span class="pill gold">Marketing</span>
+                </div>
+                <p class="disc-preview">We revamped our corporate offering last quarter and B2B revenue is up 35%. Here's what changed: we bundled 3 rooms + a debrief session + catered snacks into a flat-rate "Team Challenge" package. The key was making it brain-dead simple for the office manager to book...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">2 days ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 16</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="best-practices">
+              <div class="disc-avatar av-emerald">RC</div>
+              <div class="disc-content">
+                <h4>Review response templates that actually get edited replies</h4>
+                <div class="disc-byline">
+                  <span class="author">Rachel C.</span> &middot; Trumbull, CT
+                  <span class="pill emerald">Best Practices</span>
+                </div>
+                <p class="disc-preview">Sharing our approach to negative review responses. We've had 6 customers in the past month update their reviews from 2-3 stars to 4-5 after our follow-up. Template structure: acknowledge, apologize specifically, offer a make-good, invite back personally...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">2 days ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 22</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="general">
+              <div class="disc-avatar av-iron">LP</div>
+              <div class="disc-content">
+                <h4>Insurance renewal coming up &mdash; who are you using?</h4>
+                <div class="disc-byline">
+                  <span class="author">Luis P.</span> &middot; Katy, TX
+                  <span class="pill">General</span>
+                </div>
+                <p class="disc-preview">Our GL and property policy is up for renewal in July. Last year's premium jumped 18% and I want to shop around. Anyone have recommendations for carriers that understand the escape room / entertainment venue space? Getting quotes that are all over the map...</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">3 days ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 11</span>
+              </div>
+            </div>
+
+            <div class="discussion-item" data-category="setup">
+              <div class="disc-avatar av-brass">NH</div>
+              <div class="disc-content">
+                <h4>Sound system upgrade for immersion &mdash; worth the investment?</h4>
+                <div class="disc-byline">
+                  <span class="author">Nate H.</span> &middot; Woodbridge, NJ
+                  <span class="pill steel">Setup &amp; Design</span>
+                </div>
+                <p class="disc-preview">Thinking about upgrading from the standard ceiling speakers to directional audio zones in our rooms. Got a quote for $1,800 per room. For those who've done it: noticeable impact on guest scores? Is there a sweet spot for which rooms benefit most?</p>
+              </div>
+              <div class="disc-stats">
+                <span class="disc-time">4 days ago</span>
+                <span class="disc-replies"><span class="reply-icon">&#9993;</span> 9</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar-widget">
+          <div class="widget-card" style="margin-bottom: 20px;">
+            <h3 class="widget-title">Top Contributors</h3>
+            <ul class="contributor-list">
+              <li class="contributor-item">
+                <span class="contributor-rank rank-1">1</span>
+                <div class="contributor-avatar" style="background: var(--grad-brass); color: var(--paper); border-color: var(--brass-deep);">MR</div>
+                <div class="contributor-info">
+                  <div class="contributor-name">Mike R.</div>
+                  <div class="contributor-venue">San Antonio, TX</div>
+                </div>
+                <div class="contributor-count">47<span>posts</span></div>
+              </li>
+              <li class="contributor-item">
+                <span class="contributor-rank rank-2">2</span>
+                <div class="contributor-avatar" style="background: linear-gradient(135deg, var(--emerald), #0A3A36); color: var(--florescent); border-color: var(--emerald);">RC</div>
+                <div class="contributor-info">
+                  <div class="contributor-name">Rachel C.</div>
+                  <div class="contributor-venue">Trumbull, CT</div>
+                </div>
+                <div class="contributor-count">39<span>posts</span></div>
+              </li>
+              <li class="contributor-item">
+                <span class="contributor-rank rank-3">3</span>
+                <div class="contributor-avatar">KM</div>
+                <div class="contributor-info">
+                  <div class="contributor-name">Karen M.</div>
+                  <div class="contributor-venue">Columbus, OH</div>
+                </div>
+                <div class="contributor-count">34<span>posts</span></div>
+              </li>
+              <li class="contributor-item">
+                <span class="contributor-rank">4</span>
+                <div class="contributor-avatar" style="background: var(--grad-brass); color: var(--paper); border-color: var(--brass-deep);">TW</div>
+                <div class="contributor-info">
+                  <div class="contributor-name">Tom W.</div>
+                  <div class="contributor-venue">Concord, NC</div>
+                </div>
+                <div class="contributor-count">28<span>posts</span></div>
+              </li>
+              <li class="contributor-item">
+                <span class="contributor-rank">5</span>
+                <div class="contributor-avatar" style="background: linear-gradient(135deg, var(--emerald), #0A3A36); color: var(--florescent); border-color: var(--emerald);">JL</div>
+                <div class="contributor-info">
+                  <div class="contributor-name">Jessica L.</div>
+                  <div class="contributor-venue">Nashville, TN</div>
+                </div>
+                <div class="contributor-count">25<span>posts</span></div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="widget-card">
+            <h3 class="widget-title">Community Stats</h3>
+            <div class="stats-row">
+              <div class="stat-block">
+                <div class="stat-number">420</div>
+                <div class="stat-label">Topics</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-number">2.1k</div>
+                <div class="stat-label">Replies</div>
+              </div>
+              <div class="stat-block">
+                <div class="stat-number">48</div>
+                <div class="stat-label">Members</div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- ============ MODAL: Start a Discussion ============ -->
+      <div class="modal-overlay" id="discussionModal">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h3>Start a Discussion</h3>
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+          </div>
+
+          <form id="discussionForm">
+            <div class="modal-body" id="modalFormBody">
+              <div class="modal-form-group">
+                <label class="modal-label" for="disc-category">Category <span class="req">*</span></label>
+                <select class="modal-select" id="disc-category" required>
+                  <option value="" disabled selected>Select a channel...</option>
+                  <option value="general">General Discussion</option>
+                  <option value="best-practices">Best Practices &amp; Tips</option>
+                  <option value="marketing">Marketing Ideas</option>
+                  <option value="setup">Game Room Setup &amp; Design</option>
+                  <option value="technical">Technical Issues</option>
+                  <option value="new-owner">New Owner Corner</option>
+                </select>
+              </div>
+
+              <div class="modal-form-group">
+                <label class="modal-label" for="disc-subject">Subject <span class="req">*</span></label>
+                <input class="modal-input" type="text" id="disc-subject" placeholder="What's the topic?" required>
+              </div>
+
+              <div class="modal-form-group">
+                <label class="modal-label" for="disc-body">Body <span class="req">*</span></label>
+                <textarea class="modal-textarea" id="disc-body" placeholder="Share your thoughts, questions, or ideas with the community..." required></textarea>
+              </div>
+            </div>
+
+            <div class="modal-actions" id="modalActions">
+              <button type="button" class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
+              <button type="submit" class="btn">Post Discussion</button>
+            </div>
+          </form>
+
+          <div class="modal-success" id="modalSuccess">
+            <div class="success-icon">&#10003;</div>
+            <h4>Discussion Posted</h4>
+            <p>Your thread is now live in the community. Other franchise owners will be notified and can reply. You will receive email alerts for new responses.</p>
+            <div style="margin-top: 24px;">
+              <button class="btn btn-ghost" id="closeSuccessBtn">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+<script>
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // ---- Modal: Open / Close ----
+    var modal = document.getElementById('discussionModal');
+    var openBtn = document.getElementById('openModalBtn');
+    var closeBtn = document.getElementById('closeModalBtn');
+    var cancelBtn = document.getElementById('cancelModalBtn');
+    var closeSuccessBtn = document.getElementById('closeSuccessBtn');
+    var form = document.getElementById('discussionForm');
+    var formBody = document.getElementById('modalFormBody');
+    var formActions = document.getElementById('modalActions');
+    var successMsg = document.getElementById('modalSuccess');
+
+    function openModal() {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      // Reset form state after close
+      setTimeout(function() {
+        form.reset();
+        formBody.style.display = '';
+        formActions.style.display = '';
+        successMsg.classList.remove('show');
+      }, 300);
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeModal);
+    if (closeSuccessBtn) closeSuccessBtn.addEventListener('click', closeModal);
+
+    // Close on overlay click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeModal();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    // ---- Modal: Form Submission ----
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var category = document.getElementById('disc-category').value;
+      var subject = document.getElementById('disc-subject').value.trim();
+      var body = document.getElementById('disc-body').value.trim();
+
+      if (!category || !subject || !body) {
+        // Highlight empty fields
+        var fields = form.querySelectorAll('[required]');
+        fields.forEach(function(f) {
+          if (!f.value || f.value === '') {
+            f.style.borderColor = '#8D1324';
+            var handler = function() {
+              f.style.borderColor = '';
+              f.removeEventListener('input', handler);
+              f.removeEventListener('change', handler);
+            };
+            f.addEventListener('input', handler);
+            f.addEventListener('change', handler);
+          }
+        });
+        return;
+      }
+
+      // Show success
+      formBody.style.display = 'none';
+      formActions.style.display = 'none';
+      successMsg.classList.add('show');
+    });
+
+    // ---- Category Card Filtering ----
+    var categoryCards = document.querySelectorAll('.category-card');
+    var discussionItems = document.querySelectorAll('.discussion-item');
+    var activeFilter = document.getElementById('activeFilter');
+    var filterName = document.getElementById('filterName');
+    var clearFilterBtn = document.getElementById('clearFilter');
+
+    var categoryNames = {
+      'general': 'General Discussion',
+      'best-practices': 'Best Practices & Tips',
+      'marketing': 'Marketing Ideas',
+      'setup': 'Game Room Setup & Design',
+      'technical': 'Technical Issues',
+      'new-owner': 'New Owner Corner'
+    };
+
+    function filterDiscussions(category) {
+      var hasMatch = false;
+      discussionItems.forEach(function(item) {
+        if (category && item.dataset.category !== category) {
+          item.style.display = 'none';
+        } else {
+          item.style.display = '';
+          hasMatch = true;
+        }
+      });
+
+      // Update active filter badge
+      if (category) {
+        filterName.textContent = categoryNames[category] || category;
+        activeFilter.classList.add('show');
+      } else {
+        activeFilter.classList.remove('show');
+      }
+
+      // Update card active state
+      categoryCards.forEach(function(card) {
+        if (category && card.dataset.category === category) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      });
+    }
+
+    categoryCards.forEach(function(card) {
+      card.addEventListener('click', function() {
+        var cat = card.dataset.category;
+        // Toggle: if already active, clear filter
+        if (card.classList.contains('active')) {
+          filterDiscussions(null);
+        } else {
+          filterDiscussions(cat);
+          // Scroll to discussions
+          var target = document.getElementById('discussions');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+    clearFilterBtn.addEventListener('click', function() {
+      filterDiscussions(null);
+    });
+
+  });
+})();
+</script>
+</body>
+</html>

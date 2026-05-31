@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Help &amp; Support — The Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  /* ---- Support Page Styles ---- */
+
+  /* FAQ Accordion */
+  .support-page .faq-list { margin-bottom: 8px; }
+  .support-page .faq-item {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.32), rgba(30,36,49,0.5));
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .support-page .faq-item:hover { border-color: var(--border); }
+  .support-page .faq-item.active { border-color: var(--brass); }
+  .support-page .faq-question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    padding: 18px 22px;
+    background: transparent;
+    border: none;
+    color: var(--paper);
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.3;
+    transition: color 0.15s;
+  }
+  .support-page .faq-question:hover { color: var(--brass-light); }
+  .support-page .faq-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--brass-light);
+    transition: transform 0.25s ease;
+  }
+  .support-page .faq-item.active .faq-chevron { transform: rotate(180deg); }
+  .support-page .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+  }
+  .support-page .faq-item.active .faq-answer {
+    max-height: 400px;
+  }
+  .support-page .faq-answer-inner {
+    padding: 0 22px 20px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--muted-strong);
+  }
+  .support-page .faq-answer-inner a {
+    color: var(--brass-light);
+    font-weight: 600;
+  }
+  .support-page .faq-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 2px;
+    background: rgba(183,119,41,0.18);
+    color: var(--brass-light);
+    margin-right: 10px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* Form Layout */
+  .support-page .form-section {
+    background: linear-gradient(180deg, rgba(59,69,89,0.35), rgba(30,36,49,0.55));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .support-page .form-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 95% 5%, rgba(183,119,41,0.1), transparent 40%),
+      radial-gradient(circle at 5% 95%, rgba(6,220,206,0.04), transparent 40%);
+  }
+  .support-page .form-section > * { position: relative; z-index: 1; }
+  .support-page .form-title {
+    font-family: 'Alverata', 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 26px;
+    color: var(--paper);
+    margin-bottom: 6px;
+  }
+  .support-page .form-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .support-page .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .support-page .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .support-page .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+  .support-page .form-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--brass-light);
+  }
+  .support-page .form-label .req {
+    color: var(--brick);
+    margin-left: 2px;
+  }
+  .support-page .form-input,
+  .support-page .form-select,
+  .support-page .form-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(2,20,20,0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    color: var(--paper);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  .support-page .form-input:focus,
+  .support-page .form-select:focus,
+  .support-page .form-textarea:focus {
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px rgba(183,119,41,0.15);
+  }
+  .support-page .form-input::placeholder,
+  .support-page .form-textarea::placeholder {
+    color: var(--muted);
+  }
+  .support-page .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23B77729' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .support-page .form-select option {
+    background: var(--iron-deep);
+    color: var(--paper);
+  }
+  .support-page .form-textarea {
+    min-height: 130px;
+    resize: vertical;
+  }
+
+  /* Priority Radio Group */
+  .support-page .priority-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .support-page .priority-option {
+    position: relative;
+    flex: 1;
+    min-width: 110px;
+  }
+  .support-page .priority-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .support-page .priority-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(2,20,20,0.5);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted-strong);
+    letter-spacing: 0.06em;
+  }
+  .support-page .priority-label:hover {
+    border-color: var(--border);
+    background: rgba(59,69,89,0.3);
+  }
+  .support-page .priority-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid currentColor;
+    transition: box-shadow 0.2s;
+  }
+  .support-page .priority-option.p-low .priority-dot { color: var(--steel); background: var(--steel); }
+  .support-page .priority-option.p-medium .priority-dot { color: var(--gold); background: var(--gold); }
+  .support-page .priority-option.p-high .priority-dot { color: #E07B3A; background: #E07B3A; }
+  .support-page .priority-option.p-urgent .priority-dot { color: var(--brick); background: var(--brick); }
+
+  .support-page .priority-option input[type="radio"]:checked + .priority-label {
+    border-color: var(--brass);
+    background: rgba(183,119,41,0.1);
+    color: var(--paper);
+    box-shadow: 0 0 0 2px rgba(183,119,41,0.15);
+  }
+  .support-page .priority-option.p-low input[type="radio"]:checked + .priority-label { border-color: var(--steel); box-shadow: 0 0 0 2px rgba(111,129,120,0.2); }
+  .support-page .priority-option.p-medium input[type="radio"]:checked + .priority-label { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(245,167,55,0.2); }
+  .support-page .priority-option.p-high input[type="radio"]:checked + .priority-label { border-color: #E07B3A; box-shadow: 0 0 0 2px rgba(224,123,58,0.2); }
+  .support-page .priority-option.p-urgent input[type="radio"]:checked + .priority-label { border-color: var(--brick); box-shadow: 0 0 0 2px rgba(141,19,36,0.2); }
+
+  .support-page .priority-option.p-urgent .priority-dot {
+    animation: urgentPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgentPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(141,19,36,0.5); }
+    50% { box-shadow: 0 0 0 4px rgba(141,19,36,0); }
+  }
+
+  /* Drag & Drop Attachment Zone */
+  .support-page .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(2,20,20,0.3);
+    transition: border-color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .support-page .drop-zone:hover {
+    border-color: var(--brass);
+    background: rgba(183,119,41,0.04);
+  }
+  .support-page .drop-zone .drop-icon {
+    font-size: 28px;
+    color: var(--brass-light);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .support-page .drop-zone .drop-text {
+    font-size: 13px;
+    color: var(--muted-strong);
+    margin-bottom: 4px;
+  }
+  .support-page .drop-zone .drop-hint {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .support-page .drop-zone .drop-browse {
+    color: var(--brass-light);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Submit Row */
+  .support-page .form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .support-page .form-actions .form-note {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .support-page .btn-submit {
+    padding: 13px 32px;
+    font-size: 13px;
+  }
+
+  /* Success Toast */
+  .support-page .success-toast {
+    display: none;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 24px;
+    background: linear-gradient(90deg, rgba(33,93,88,0.35), rgba(33,93,88,0.12));
+    border: 1px solid var(--emerald);
+    border-left: 3px solid var(--florescent);
+    border-radius: var(--radius);
+    margin-top: 20px;
+    animation: toastIn 0.4s ease;
+  }
+  .support-page .success-toast.show { display: flex; }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .support-page .success-toast .toast-icon {
+    font-size: 22px;
+    color: var(--florescent);
+    flex-shrink: 0;
+  }
+  .support-page .success-toast .toast-text strong {
+    display: block;
+    font-family: 'Alverata', serif;
+    font-size: 14px;
+    color: var(--paper);
+    margin-bottom: 2px;
+  }
+  .support-page .success-toast .toast-text span {
+    font-size: 12px;
+    color: var(--muted-strong);
+    line-height: 1.5;
+  }
+
+  /* Recent Tickets Table */
+  .support-page .tickets-table { width: 100%; border-collapse: collapse; }
+  .support-page .tickets-table th,
+  .support-page .tickets-table td {
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13px;
+  }
+  .support-page .tickets-table th {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brass-light);
+    font-weight: 800;
+    background: rgba(59,69,89,0.4);
+    border-bottom: 1px solid var(--border);
+  }
+  .support-page .tickets-table tr:hover td {
+    background: rgba(183,119,41,0.04);
+  }
+  .support-page .tickets-table .ticket-id {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--brass-light);
+    letter-spacing: 0.05em;
+  }
+  .support-page .tickets-table .ticket-subject {
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .support-page .tickets-table .ticket-date {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* Quick Help Cards Grid */
+  .support-page .quick-help-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .support-page .quick-help-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 18px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.32), rgba(30,36,49,0.5));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .support-page .quick-help-card:hover {
+    border-color: var(--brass);
+    transform: translateY(-1px);
+  }
+  .support-page .quick-help-card .qh-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: rgba(183,119,41,0.15);
+    color: var(--brass-light);
+    border: 1px solid var(--border);
+  }
+  .support-page .quick-help-card h4 {
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--paper);
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .support-page .quick-help-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+
+  /* Contact strip */
+  .support-page .contact-strip {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .support-page .contact-card {
+    flex: 1;
+    min-width: 240px;
+    padding: 24px 22px;
+    background: linear-gradient(180deg, rgba(59,69,89,0.32), rgba(30,36,49,0.5));
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: border-color 0.2s;
+  }
+  .support-page .contact-card:hover { border-color: var(--brass); }
+  .support-page .contact-card .cc-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+  .support-page .contact-card .cc-icon.cc-emerald {
+    background: rgba(33,93,88,0.28);
+    color: var(--florescent);
+    border-color: rgba(6,220,206,0.25);
+  }
+  .support-page .contact-card .cc-icon.cc-brass {
+    background: rgba(183,119,41,0.18);
+    color: var(--brass-light);
+  }
+  .support-page .contact-card .cc-icon.cc-brick {
+    background: rgba(141,19,36,0.22);
+    color: #D65566;
+    border-color: rgba(141,19,36,0.4);
+  }
+  .support-page .contact-card h4 {
+    font-family: 'Alverata', serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--paper);
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  .support-page .contact-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 1100px) {
+    .support-page .quick-help-grid { grid-template-columns: repeat(2, 1fr); }
+    .support-page .form-grid { grid-template-columns: 1fr; }
+    .support-page .priority-group { flex-direction: column; }
+  }
+  @media (max-width: 720px) {
+    .support-page .quick-help-grid { grid-template-columns: 1fr; }
+    .support-page .form-section { padding: 28px 20px; }
+    .support-page .form-actions { flex-direction: column; align-items: stretch; text-align: center; }
+    .support-page .contact-strip { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div data-slot="sidebar"></div>
+  <main class="main">
+    <div data-slot="topbar"></div>
+    <div class="content support-page">
+
+      <!-- ============ HERO ============ -->
+      <div class="sp-hero">
+        <div class="inner">
+          <div class="breadcrumb"><a href="index.html">The Hub</a> &rsaquo; Help &amp; Support</div>
+          <h1 class="page-title">Help &amp; <span class="accent">Support</span></h1>
+          <p class="page-subtitle">Find answers to common questions, browse troubleshooting guides, or submit a support ticket directly to the HQ operations team. We typically respond within 4 business hours.</p>
+        </div>
+      </div>
+
+      <!-- ============ QUICK HELP TOPICS ============ -->
+      <div class="section-head">
+        <h2>Quick Help</h2>
+        <a href="#">Browse All Topics</a>
+      </div>
+
+      <div class="quick-help-grid">
+        <div class="quick-help-card">
+          <div class="qh-icon">⚙</div>
+          <div>
+            <h4>Booking System</h4>
+            <p>Resova login issues, calendar setup, and reporting help</p>
+          </div>
+        </div>
+        <div class="quick-help-card">
+          <div class="qh-icon">◇</div>
+          <div>
+            <h4>Game &amp; Room Issues</h4>
+            <p>Reset procedures, prop repairs, and tech troubleshooting</p>
+          </div>
+        </div>
+        <div class="quick-help-card">
+          <div class="qh-icon">▤</div>
+          <div>
+            <h4>Marketing Assets</h4>
+            <p>Brand files, campaign materials, and social templates</p>
+          </div>
+        </div>
+        <div class="quick-help-card">
+          <div class="qh-icon">◆</div>
+          <div>
+            <h4>POS &amp; Payments</h4>
+            <p>Terminal setup, refund processing, and gift cards</p>
+          </div>
+        </div>
+        <div class="quick-help-card">
+          <div class="qh-icon">☷</div>
+          <div>
+            <h4>Staffing &amp; Scheduling</h4>
+            <p>Hiring support, shift templates, and payroll questions</p>
+          </div>
+        </div>
+        <div class="quick-help-card">
+          <div class="qh-icon">▦</div>
+          <div>
+            <h4>Maintenance</h4>
+            <p>Facility requests, vendor contacts, and safety compliance</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ FAQ ACCORDION ============ -->
+      <div class="section-head">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">Booking</span> I'm locked out of Resova — how do I reset my credentials?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Go to <a href="#">resova.com/login</a> and click "Forgot Password." Use your venue manager email address. If you still cannot access your account after the reset, submit a support ticket below with the category "Booking System" and we will escalate to Resova directly. Typical resolution time is under 2 hours during business hours.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">Games</span> A prop or puzzle element is broken — what's the reset/repair process?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              First, check the game-specific troubleshooting guide on the <a href="games.html">Games page</a>. Most prop issues have a quick fix documented there. If the issue requires a replacement part, submit a maintenance ticket below with photos of the damage. Include the game name, room number, and prop description. HQ will ship replacement parts within 3-5 business days for stocked items.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">Marketing</span> Where can I find logos, photos, and marketing templates?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              All brand-approved marketing assets are available on the <a href="marketing.html">Marketing page</a>. This includes logos (all formats), game photography, social media templates, print-ready files, and the complete brand guidelines. For custom creative requests — such as local event flyers or co-branded materials — submit a marketing request through the form on that page. Allow 5-7 business days for custom work.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">POS</span> My payment terminal is not processing transactions — what should I do?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Start by power-cycling the terminal (unplug for 30 seconds, then reconnect). Verify your internet connection is stable and that the terminal is on the correct Wi-Fi network. If the issue persists, check for any pending software updates on the device. For hardware failures, submit an urgent support ticket below. We maintain spare terminals at HQ and can overnight a replacement if needed.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">Staffing</span> How do I onboard a new Game Master into our systems?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Follow the <a href="operations.html#hiring">Onboarding Checklist</a> under Pillar 01 on the Operations page. You will need to: (1) submit their info for Resova user creation, (2) enroll them in Escapology University LMS, (3) set up their scheduling account, and (4) begin the GM Certification Program. The full onboarding process takes approximately 14 days. If you need system access set up urgently, submit a ticket with the "HR/Staffing" category.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">Maintenance</span> I need an emergency repair — HVAC, plumbing, or electrical issue.</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              For true emergencies (water leak, power outage, safety hazard), contact your regional facilities manager directly — see the <a href="#">HQ Ops Contacts</a> directory. For non-emergency maintenance requests, submit a ticket below with priority "High" and the "Maintenance/Facilities" category. Include photos and a description of the issue's impact on operations. Most non-emergency requests are scheduled within 48 hours.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question">
+            <span><span class="faq-tag">IT</span> How do I get Wi-Fi credentials or set up a new workstation?</span>
+            <span class="faq-chevron">&#9662;</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              Wi-Fi credentials for your venue are stored in your venue's secure operations folder on the shared drive. For new workstation setup (POS terminal, game control station, or office computer), submit a ticket with the "IT/Technical" category. Include the device type, intended use, and any software that needs to be installed. IT will provide remote setup instructions or schedule a configuration call within 24 hours.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SUPPORT TICKET FORM ============ -->
+      <div class="section-head" style="margin-top: 64px;">
+        <h2>Submit a Ticket</h2>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-title">New Support Ticket</h3>
+        <p class="form-subtitle">Describe your issue below. The HQ operations team monitors tickets during business hours (Mon-Fri, 8AM-6PM ET). Urgent issues are escalated immediately.</p>
+
+        <form id="supportForm" novalidate>
+          <div class="form-grid">
+            <!-- Name -->
+            <div class="form-group">
+              <label class="form-label" for="ticket-name">Your Name <span class="req">*</span></label>
+              <input class="form-input" type="text" id="ticket-name" value="Katy Dean" required>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="ticket-email">Email <span class="req">*</span></label>
+              <input class="form-input" type="email" id="ticket-email" value="katy.dean@escapology.com" required>
+            </div>
+
+            <!-- Venue Location -->
+            <div class="form-group">
+              <label class="form-label" for="ticket-venue">Venue Location <span class="req">*</span></label>
+              <select class="form-select" id="ticket-venue" required>
+                <option value="" disabled>Select your venue...</option>
+                <option value="orlando" selected>Orlando, FL</option>
+                <option value="san-antonio">San Antonio, TX</option>
+                <option value="nashville">Nashville, TN</option>
+                <option value="jacksonville">Jacksonville, FL</option>
+                <option value="lakeland">Lakeland, FL</option>
+                <option value="trumbull">Trumbull, CT</option>
+                <option value="reno">Reno, NV</option>
+                <option value="columbus">Columbus, OH</option>
+                <option value="fort-worth">Fort Worth, TX</option>
+                <option value="woodbridge">Woodbridge, NJ</option>
+                <option value="katy">Katy, TX</option>
+                <option value="concord">Concord, NC</option>
+              </select>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label" for="ticket-category">Category <span class="req">*</span></label>
+              <select class="form-select" id="ticket-category" required>
+                <option value="" disabled selected>Select a category...</option>
+                <option value="booking">Booking System</option>
+                <option value="game">Game / Room Issue</option>
+                <option value="pos">POS / Payment</option>
+                <option value="marketing">Marketing Request</option>
+                <option value="it">IT / Technical</option>
+                <option value="maintenance">Maintenance / Facilities</option>
+                <option value="hr">HR / Staffing</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Priority -->
+            <div class="form-group full-width">
+              <label class="form-label">Priority <span class="req">*</span></label>
+              <div class="priority-group">
+                <div class="priority-option p-low">
+                  <input type="radio" name="priority" id="p-low" value="low">
+                  <label class="priority-label" for="p-low">
+                    <span class="priority-dot"></span>
+                    Low
+                  </label>
+                </div>
+                <div class="priority-option p-medium">
+                  <input type="radio" name="priority" id="p-medium" value="medium" checked>
+                  <label class="priority-label" for="p-medium">
+                    <span class="priority-dot"></span>
+                    Medium
+                  </label>
+                </div>
+                <div class="priority-option p-high">
+                  <input type="radio" name="priority" id="p-high" value="high">
+                  <label class="priority-label" for="p-high">
+                    <span class="priority-dot"></span>
+                    High
+                  </label>
+                </div>
+                <div class="priority-option p-urgent">
+                  <input type="radio" name="priority" id="p-urgent" value="urgent">
+                  <label class="priority-label" for="p-urgent">
+                    <span class="priority-dot"></span>
+                    Urgent
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subject -->
+            <div class="form-group full-width">
+              <label class="form-label" for="ticket-subject">Subject <span class="req">*</span></label>
+              <input class="form-input" type="text" id="ticket-subject" placeholder="Brief summary of the issue..." required>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group full-width">
+              <label class="form-label" for="ticket-desc">Description <span class="req">*</span></label>
+              <textarea class="form-textarea" id="ticket-desc" placeholder="Describe the issue in detail. Include any error messages, steps to reproduce, and the impact on operations..." required></textarea>
+            </div>
+
+            <!-- Attachments -->
+            <div class="form-group full-width">
+              <label class="form-label">Attachments</label>
+              <div class="drop-zone" id="dropZone">
+                <span class="drop-icon">&#8693;</span>
+                <div class="drop-text">Drag &amp; drop files here, or <span class="drop-browse">browse</span></div>
+                <div class="drop-hint">PNG, JPG, PDF, or MP4 up to 25MB</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <div class="form-note">
+              Fields marked with <span style="color: var(--brick); font-weight: 800;">*</span> are required. You will receive a confirmation email upon submission.
+            </div>
+            <button type="submit" class="btn btn-submit">Submit Ticket</button>
+          </div>
+        </form>
+
+        <div class="success-toast" id="successToast">
+          <span class="toast-icon">&#10003;</span>
+          <div class="toast-text">
+            <strong>Ticket Submitted Successfully</strong>
+            <span>Ticket #ESC-2026-0847 has been created. You will receive a confirmation at katy.dean@escapology.com. Expected first response within 4 business hours.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ RECENT TICKETS ============ -->
+      <div class="section-head" style="margin-top: 64px;">
+        <h2>Recent Tickets</h2>
+        <a href="#">View All Tickets</a>
+      </div>
+
+      <table class="tickets-table">
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Subject</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ticket-id">#ESC-2026-0844</td>
+            <td class="ticket-subject">Resova calendar not syncing weekend slots</td>
+            <td>Booking System</td>
+            <td><span class="pill gold">High</span></td>
+            <td><span class="pill emerald">In Progress</span></td>
+            <td class="ticket-date">May 28, 2026</td>
+          </tr>
+          <tr>
+            <td class="ticket-id">#ESC-2026-0839</td>
+            <td class="ticket-subject">Batman room — RFID reader on Puzzle 4 intermittent</td>
+            <td>Game / Room Issue</td>
+            <td><span class="pill gold">Medium</span></td>
+            <td><span class="pill emerald">In Progress</span></td>
+            <td class="ticket-date">May 25, 2026</td>
+          </tr>
+          <tr>
+            <td class="ticket-id">#ESC-2026-0831</td>
+            <td class="ticket-subject">Request updated social templates for summer campaign</td>
+            <td>Marketing Request</td>
+            <td><span class="pill steel">Low</span></td>
+            <td><span class="pill">Open</span></td>
+            <td class="ticket-date">May 22, 2026</td>
+          </tr>
+          <tr>
+            <td class="ticket-id">#ESC-2026-0819</td>
+            <td class="ticket-subject">POS terminal #2 card reader replacement</td>
+            <td>POS / Payment</td>
+            <td><span class="pill gold">High</span></td>
+            <td><span class="pill" style="background: var(--muted); color: var(--iron-black);">Resolved</span></td>
+            <td class="ticket-date">May 18, 2026</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ============ CONTACT INFO ============ -->
+      <div class="section-head" style="margin-top: 64px;">
+        <h2>Other Ways to Reach Us</h2>
+      </div>
+
+      <div class="contact-strip">
+        <div class="contact-card">
+          <div class="cc-icon cc-emerald">&#9993;</div>
+          <div>
+            <h4>Email HQ Directly</h4>
+            <p>support@escapology.com</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon cc-brass">&#9742;</div>
+          <div>
+            <h4>Phone Support</h4>
+            <p>Mon-Fri, 8AM-6PM ET</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon cc-brick">&#9888;</div>
+          <div>
+            <h4>Emergency Line</h4>
+            <p>After-hours critical issues only</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<div data-slot="badge"></div>
+<script src="assets/nav.js"></script>
+<script>
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // ---- FAQ Accordion ----
+    var faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(function(item) {
+      var btn = item.querySelector('.faq-question');
+      btn.addEventListener('click', function() {
+        var isActive = item.classList.contains('active');
+        // Close all
+        faqItems.forEach(function(other) {
+          other.classList.remove('active');
+        });
+        // Toggle clicked
+        if (!isActive) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // ---- Form Submission ----
+    var form = document.getElementById('supportForm');
+    var toast = document.getElementById('successToast');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Basic validation
+      var name = document.getElementById('ticket-name').value.trim();
+      var email = document.getElementById('ticket-email').value.trim();
+      var venue = document.getElementById('ticket-venue').value;
+      var category = document.getElementById('ticket-category').value;
+      var subject = document.getElementById('ticket-subject').value.trim();
+      var desc = document.getElementById('ticket-desc').value.trim();
+      var priority = document.querySelector('input[name="priority"]:checked');
+
+      if (!name || !email || !venue || !category || !subject || !desc || !priority) {
+        // Highlight empty required fields
+        var inputs = form.querySelectorAll('[required]');
+        inputs.forEach(function(input) {
+          if (!input.value || input.value === '') {
+            input.style.borderColor = '#8D1324';
+            input.addEventListener('input', function handler() {
+              input.style.borderColor = '';
+              input.removeEventListener('input', handler);
+            });
+            input.addEventListener('change', function handler() {
+              input.style.borderColor = '';
+              input.removeEventListener('change', handler);
+            });
+          }
+        });
+        return;
+      }
+
+      // Show success
+      toast.classList.add('show');
+      toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      // Disable submit
+      var submitBtn = form.querySelector('.btn-submit');
+      submitBtn.textContent = 'Submitted';
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.5';
+      submitBtn.style.cursor = 'default';
+    });
+
+    // ---- Drop Zone Hover Effect ----
+    var dropZone = document.getElementById('dropZone');
+    if (dropZone) {
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.style.borderColor = 'var(--brass-light)';
+        dropZone.style.background = 'rgba(183,119,41,0.08)';
+      });
+      dropZone.addEventListener('dragleave', function() {
+        dropZone.style.borderColor = '';
+        dropZone.style.background = '';
+      });
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.style.borderColor = '';
+        dropZone.style.background = '';
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
