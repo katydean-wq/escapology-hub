@@ -123,6 +123,24 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   box-shadow: 0 0 12px rgba(6,220,206,0.5);
 }
+.logo-text .cog-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin: 0 1px;
+  vertical-align: middle;
+}
+.logo-text .cog-wrap .brand-cog {
+  width: 20px;
+  height: 20px;
+  animation: cogSpin 24s linear infinite;
+}
+@keyframes cogSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 .brand .tag {
   margin-top: 10px;
   font-family: 'Alverata', serif;

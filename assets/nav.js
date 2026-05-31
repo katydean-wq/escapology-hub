@@ -1,12 +1,14 @@
 // Shared sidebar + topbar injector
 (function(){
+  /* SVG cog mark — matches the Escapology brand cog */
+  const cogSVG = `<svg class="brand-cog" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="cogG" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D9902C"/><stop offset="50%" stop-color="#B77729"/><stop offset="100%" stop-color="#7A4E1C"/></linearGradient></defs><path fill="url(#cogG)" fill-rule="evenodd" d="M55.2 4.5L57.3 0h5.4l2.1 4.5 3.5.7L73 1l4.5 2.5-1.9 4.7 2.8 2.3 5-2 3.5 3.8-3.5 4 1.8 3 5.2-.5 2 4.8-4.8 2.3.6 3.4 5.2 1.3.3 5.1-5.2.9v3.5l5.2.9-.3 5.1-5.2 1.3-.6 3.4 4.8 2.3-2 4.8-5.2-.5-1.8 3 3.5 4-3.5 3.8-5-2-2.8 2.3 1.9 4.7L73 119l-4.7-4.3-3.5.7L62.7 120h-5.4l-2.1-4.5-3.5-.7L47 119l-4.5-2.5 1.9-4.7-2.8-2.3-5 2-3.5-3.8 3.5-4-1.8-3-5.2.5-2-4.8 4.8-2.3-.6-3.4-5.2-1.3-.3-5.1 5.2-.9v-3.5l-5.2-.9.3-5.1 5.2-1.3.6-3.4-4.8-2.3 2-4.8 5.2.5 1.8-3-3.5-4 3.5-3.8 5 2 2.8-2.3-1.9-4.7L47 1l4.7 4.3 3.5-.7ZM60 36a24 24 0 100 48 24 24 0 000-48Zm0 8a16 16 0 110 32 16 16 0 010-32Z"/></svg>`;
+
   const navHTML = `
   <aside class="sidebar">
     <div class="brand">
       <a href="index.html">
-        <img class="logo-img" src="assets/img/escapology-logo.png" alt="Escapology" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
-        <div id="logo-fallback" class="logo-text" style="display:none;">
-          ESCAPOL<span class="cog"></span>GY
+        <div class="logo-text">
+          ESCAPOL<span class="cog-wrap">${cogSVG}</span>GY
         </div>
       </a>
       <div class="tag">The Hub</div>
@@ -24,14 +26,14 @@
       <a class="nav-item" href="dashboard.html" data-nav="dashboard">
         <span class="ico">▥</span> Dev Dashboard
       </a>
+      <a class="nav-item" href="metrics.html" data-nav="metrics">
+        <span class="ico">◎</span> League Reports
+      </a>
       <a class="nav-item" href="marketing.html#request">
         <span class="ico">✎</span> Submit a Request
       </a>
       <a class="nav-item" href="documents.html">
         <span class="ico">⌕</span> Find a Document
-      </a>
-      <a class="nav-item" href="news.html" data-nav="news">
-        <span class="ico">◉</span> Latest News
       </a>
 
       <div class="nav-heading">Sections</div>
@@ -82,9 +84,13 @@
         <a href="games.html#arizona">Arizona 2.0</a>
       </div>
 
-      <a class="nav-item" href="operations.html#hiring">
-        <span class="ico">▦</span> Training &amp; Hiring
-      </a>
+      <button class="nav-item nav-toggle" data-toggle="sub-metrics">
+        <span class="ico">◎</span> Metrics &amp; Reports
+      </button>
+      <div class="nav-sub" id="sub-metrics">
+        <a href="metrics.html"><strong>Metrics Overview</strong></a>
+        <a href="league-report.html">April League Report</a>
+      </div>
 
       <button class="nav-item nav-toggle" data-toggle="sub-venue">
         <span class="ico">▲</span> Venue Development
@@ -95,14 +101,20 @@
         <a href="https://escapology.com" target="_blank">Franchising Site ↗</a>
       </div>
 
-      <a class="nav-item" href="news.html">
+      <a class="nav-item" href="community.html" data-nav="community">
+        <span class="ico">💬</span> Community
+      </a>
+      <a class="nav-item" href="news.html" data-nav="news">
         <span class="ico">⎘</span> News &amp; Updates
+      </a>
+      <a class="nav-item" href="support.html" data-nav="support">
+        <span class="ico">⚑</span> Help &amp; Support
       </a>
     </div>
 
     <div class="sidebar-footer">
       Franchise Portal<br>
-      <a href="mailto:support@escapology.com">Contact HQ</a>
+      <a href="support.html">Get Help</a> · <a href="mailto:support@escapology.com">Contact HQ</a>
     </div>
   </aside>`;
 
@@ -137,7 +149,9 @@
       'marketing.html': 'sub-marketing',
       'operations.html': 'sub-ops',
       'games.html': 'sub-games',
-      'training.html': 'sub-training'
+      'training.html': 'sub-training',
+      'metrics.html': 'sub-metrics',
+      'league-report.html': 'sub-metrics'
     };
     const openId = map[path];
     if (openId) {
